@@ -29,7 +29,113 @@ VComponent Vector3::length() const
 
 Vector3 Vector3::normalize() const
 {
-	VComponent reciprocal = 1 / this->length();
+	VComponent len = this->length();
 
-	return Vector3(m_x * reciprocal, m_y * reciprocal, m_z * reciprocal);
+	// Normalization is required (and possible) only if the vector length is non-zero.
+	if (0 != len)
+	{
+		VComponent reciprocal = 1 / this->length();
+
+		return Vector3(m_x * reciprocal, m_y * reciprocal, m_z * reciprocal);
+	}
+	
+	return Vector3();
+}
+
+bool Vector3::operator==(const Vector3& other) const
+{
+	return (   m_x == other.m_x 
+		    && m_y == other.m_y 
+		    && m_z == other.m_z);
+}
+
+bool Vector3::operator!=(const Vector3& other) const
+{
+	return (   m_x != other.m_x
+		    || m_y != other.m_y
+		    || m_z != other.m_z);
+}
+
+Vector3& Vector3::operator=(const Vector3& other)
+{
+	m_x = other.m_x;
+	m_y = other.m_y;
+	m_z = other.m_z;
+
+	return (*this);
+}
+
+Vector3 Vector3::operator-() const
+{
+	return Vector3(-m_x, -m_y, -m_z);
+}
+
+Vector3 Vector3::operator+(const Vector3& other) const
+{
+	return Vector3(m_x + other.m_x, m_y + other.m_y, m_z + other.m_z);
+}
+
+Vector3& Vector3::operator+=(const Vector3& other)
+{
+	m_x += other.m_x;
+	m_y += other.m_y;
+	m_z += other.m_z;
+
+	return (*this);
+}
+
+Vector3 Vector3::operator-(const Vector3& other) const
+{
+	return Vector3(m_x - other.m_x, m_y - other.m_y, m_z - other.m_z);
+}
+
+Vector3& Vector3::operator-=(const Vector3& other)
+{
+	m_x -= other.m_x;
+	m_y -= other.m_y;
+	m_z -= other.m_z;
+
+	return (*this);
+}
+
+Vector3 Vector3::operator*(VComponent val) const
+{
+	return Vector3(m_x * val, m_y * val, m_z * val);
+}
+
+Vector3& Vector3::operator*=(VComponent val)
+{
+	m_x *= val;
+	m_y *= val;
+	m_z *= val;
+
+	return (*this);
+}
+
+Vector3 Vector3::operator/(VComponent val) const
+{
+	if (0 == val)
+	{
+		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
+	}
+
+	VComponent inverse = 1 / val;
+
+	return Vector3(m_x * inverse, m_y * inverse, m_z * inverse);
+}
+
+Vector3& Vector3::operator/=(VComponent val)
+{
+	if (0 == val)
+	{
+		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
+	}
+
+	VComponent inverse = 1 / val;
+
+	m_x *= inverse;
+	m_y *= inverse;
+	m_z *= inverse;
+
+	return (*this);
 }

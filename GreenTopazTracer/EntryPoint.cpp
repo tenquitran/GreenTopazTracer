@@ -22,12 +22,17 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 	int ret = {};
 
 	// TODO: temp
-#if 0
-	Vector3 v(12, -3, -4);
+#if 1
+	Vector3 v(2, 4, -8);
 	Color clr(0.2, 0.5, 0.5);
 
 	VComponent ln = v.length();
 	Vector3 vn = v.normalize();
+
+	Vector3 v2 = v / 0;
+
+	v /= 2;
+	int tmp = 1;
 #endif
 
 	try

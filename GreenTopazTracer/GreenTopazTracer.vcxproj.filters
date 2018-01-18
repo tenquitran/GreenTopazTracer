@@ -22,6 +22,9 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{cf3f0ebd-3c63-4337-ba06-b46d8296224f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GeometricObjects">
+      <UniqueIdentifier>{d16fd089-f1d2-43da-9ea8-f8a1255b27dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -51,6 +54,9 @@
     <ClInclude Include="Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeometricObject.h">
+      <Filter>GeometricObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -73,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometricObject.cpp">
+      <Filter>GeometricObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

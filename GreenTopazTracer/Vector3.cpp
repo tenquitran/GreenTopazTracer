@@ -139,3 +139,27 @@ Vector3& Vector3::operator/=(VComponent val)
 
 	return (*this);
 }
+
+VComponent Vector3::dot(const Vector3& other) const
+{
+	return (m_x * other.m_x + m_y * other.m_y + m_z * other.m_z);
+}
+
+VComponent Vector3::dot(const Vector3& a, const Vector3& b)
+{
+	return (a.m_x * b.m_x + a.m_y * b.m_y + a.m_z * b.m_z);
+}
+
+Vector3 Vector3::cross(const Vector3& other) const
+{
+	return Vector3(m_y * other.m_z - m_z * other.m_y,
+				   m_z * other.m_x - m_x * other.m_z,
+				   m_x * other.m_y - m_y * other.m_x);
+}
+
+Vector3 Vector3::cross(const Vector3& a, const Vector3& b)
+{
+	return Vector3(a.m_y * b.m_z - a.m_z * b.m_y,
+				   a.m_z * b.m_x - a.m_x * b.m_z,
+				   a.m_x * b.m_y - a.m_y * b.m_x);
+}

@@ -53,6 +53,18 @@ namespace GreenTopazTracerApp
 
 		Vector3& operator/=(VComponent val);
 
+		// Dot product: member version.
+		VComponent dot(const Vector3& other) const;
+
+		// Dot product: non-member version.
+		static VComponent dot(const Vector3& a, const Vector3& b);
+
+		// Cross product: member version.
+		Vector3 cross(const Vector3& other) const;
+
+		// Cross product: non-member version.
+		static Vector3 cross(const Vector3& a, const Vector3& b);
+
 	public:
 		VComponent m_x;
 		VComponent m_y;

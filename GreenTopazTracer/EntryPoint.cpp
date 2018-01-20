@@ -23,6 +23,21 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
 	// TODO: temp
 #if 1
+	Vector3 v1(-1, 2, -3);
+	Vector3 v2(1, -2, 3);
+
+	VComponent c1 = v1.dot(v2);
+	VComponent c2 = v2.dot(v1);
+	VComponent c3 = Vector3::dot(v1, v2);
+
+	Vector3 v3(1, 2, 3);
+	Vector3 v4(4, 5, 6);
+
+	Vector3 res1 = v3.cross(v4);
+
+	Vector3 res2 = Vector3::cross(v3, v4);
+
+#if 0
 	Vector3 v(2, 4, -8);
 	Color clr(0.2, 0.5, 0.5);
 
@@ -32,6 +47,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 	Vector3 v2 = v / 0;
 
 	v /= 2;
+#endif
 	int tmp = 1;
 #endif
 

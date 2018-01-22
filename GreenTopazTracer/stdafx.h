@@ -32,4 +32,7 @@
 
 #include "Color.h"
 
+#include "Ray.h"
+
 #include "GeometricObject.h"
+#include "Sphere.h"

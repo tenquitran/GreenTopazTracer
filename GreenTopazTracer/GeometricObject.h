@@ -10,6 +10,7 @@ namespace GreenTopazTracerApp
 
 		virtual ~GeometricObject();
 
-		// TODO: hit function, pure virtual
+	protected:
+		Vector3 m_center;
 	};
 }

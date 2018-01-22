@@ -12,13 +12,13 @@ namespace GreenTopazTracerApp
 	public:
 		Color();
 
-		explicit Color(ClrComponentType c);
+		explicit Color(ClrComponentType component);
 
-		Color(ClrComponentType r, ClrComponentType g, ClrComponentType b);
+		Color(ClrComponentType red, ClrComponentType green, ClrComponentType blue);
 
-	private:
-		ClrComponentType m_r;
-		ClrComponentType m_g;
-		ClrComponentType m_b;
+	public:
+		ClrComponentType m_red;
+		ClrComponentType m_green;
+		ClrComponentType m_blue;
 	};
 }

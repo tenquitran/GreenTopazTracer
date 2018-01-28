@@ -3,13 +3,13 @@
 
 namespace GreenTopazTracerApp
 {
-	class Sphere
+	class Plane
 		: public GeometricObject
 	{
 	public:
-		Sphere(const Vector3& center, VComponent radius);
+		Plane(const Vector3& center, const Vector3& normal);
 
-		virtual ~Sphere();
+		virtual ~Plane();
 
 		// Intersection ("hit") test.
 		// Parameters: ray - ray to test the intersection with;
@@ -18,7 +18,8 @@ namespace GreenTopazTracerApp
 		virtual bool hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo) override;
 
 	private:
-		VComponent m_radius;
+		// Normal to the plane.
+		Vector3 m_normal;
 
 		// Epsilon for intersection calculations, etc.
 		static const VComponent EPSILON;

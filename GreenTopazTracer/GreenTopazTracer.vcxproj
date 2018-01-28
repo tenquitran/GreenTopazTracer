@@ -83,8 +83,10 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="GeometricObject.h" />
     <ClInclude Include="GreenTopazTracer.h" />
-    <ClInclude Include="Intersection.h" />
+    <ClInclude Include="HitInfo.h" />
+    <ClInclude Include="ImagePlane.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sphere.h" />
@@ -98,8 +100,10 @@
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="GeometricObject.cpp" />
     <ClCompile Include="GreenTopazTracer.cpp" />
-    <ClCompile Include="Intersection.cpp" />
+    <ClCompile Include="HitInfo.cpp" />
+    <ClCompile Include="ImagePlane.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="stdafx.cpp">

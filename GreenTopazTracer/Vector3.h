@@ -70,6 +70,12 @@ namespace GreenTopazTracerApp
 		VComponent m_y;
 		VComponent m_z;
 	};
+
+	// Multiplication by VComponent on the left.
+	inline Vector3 operator*(VComponent val, const Vector3& other)
+	{
+		return (other * val);
+	}
 }
 
 #include "Vector3.inl"

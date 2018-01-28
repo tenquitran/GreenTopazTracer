@@ -7,7 +7,8 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-GeometricObject::GeometricObject()
+GeometricObject::GeometricObject(const Vector3& center)
+	: m_center(center)
 {
 }
 

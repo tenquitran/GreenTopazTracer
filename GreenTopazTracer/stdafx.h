@@ -34,5 +34,8 @@
 
 #include "Ray.h"
 
+#include "HitInfo.h"
+
 #include "GeometricObject.h"
+#include "Plane.h"
 #include "Sphere.h"

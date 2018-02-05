@@ -6,7 +6,7 @@ namespace GreenTopazTracerApp
 	// Color component data type.
 	typedef double ClrComponentType;
 
-
+#pragma pack(push, 1)
 	struct Color
 	{
 	public:
@@ -21,4 +21,5 @@ namespace GreenTopazTracerApp
 		ClrComponentType m_green;
 		ClrComponentType m_blue;
 	};
+#pragma pack(pop)
 }

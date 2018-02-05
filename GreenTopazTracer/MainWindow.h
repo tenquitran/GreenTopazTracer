@@ -6,7 +6,7 @@ namespace GreenTopazTracerApp
 	class MainWindow
 	{
 	public:
-		MainWindow(HINSTANCE hInstance, int nCmdShow);
+		MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight);
 
 		virtual ~MainWindow();
 
@@ -28,12 +28,16 @@ namespace GreenTopazTracerApp
 		// Main window handle.
 		HWND m_hMainWindow;
 
-		static const int MAX_LOADSTRING = 100;
+		static const int MaxLoadString = 100;
 
 		// The title bar text
-		WCHAR m_titleBarStr[MAX_LOADSTRING];
+		WCHAR m_titleBarStr[MaxLoadString];
 
 		// The main window class name.
-		WCHAR m_windowClassName[MAX_LOADSTRING];
+		WCHAR m_windowClassName[MaxLoadString];
+
+		// Width and height of the window.
+		int m_clientWidth;
+		int m_clientHeight;
 	};
 }

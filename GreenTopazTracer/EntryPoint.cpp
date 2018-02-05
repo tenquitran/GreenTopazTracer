@@ -21,39 +21,21 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 
 	int ret = {};
 
-	// TODO: temp
-#if 1
-	Vector3 v1(-1, 2, -3);
-	Vector3 v2(1, -2, 3);
-
-	VComponent c1 = v1.dot(v2);
-	VComponent c2 = v2.dot(v1);
-	VComponent c3 = Vector3::dot(v1, v2);
-
-	Vector3 v3(1, 2, 3);
-	Vector3 v4(4, 5, 6);
-
-	Vector3 res1 = v3.cross(v4);
-
-	Vector3 res2 = Vector3::cross(v3, v4);
-
-#if 0
-	Vector3 v(2, 4, -8);
-	Color clr(0.2, 0.5, 0.5);
-
-	VComponent ln = v.length();
-	Vector3 vn = v.normalize();
-
-	Vector3 v2 = v / 0;
-
-	v /= 2;
-#endif
-	int tmp = 1;
-#endif
-
 	try
 	{
-		MainWindow mainWindow(hInstance, nCmdShow);
+		const int ImageWidth  = 800;
+		const int ImageHeight = 600;
+
+		// TODO: temp
+		//ImagePlane imagePlane(1, 1);
+
+		ImagePlane imagePlane(ImageWidth, ImageHeight);
+
+		// TODO: temp
+		MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight);
+
+		//imagePlane.setPixelColor(0, 0, Color(1, 1, 1));
+		//imagePlane.setPixelColor(0, 1, Color(2, 2, 2));
 
 		ret = mainWindow.runMessageLoop();
 	}

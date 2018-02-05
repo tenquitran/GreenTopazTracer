@@ -7,7 +7,7 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 // Epsilon for intersection calculations, etc.
-const VComponent Sphere::EPSILON = 0.001;
+const VComponent Sphere::Epsilon = 0.001;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	// Smaller root of the quadratic equation.
 	t = (-b - e) / denominator;
 
-	if (t > EPSILON)
+	if (t > Epsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;
@@ -53,7 +53,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	// Larger root of the quadratic equation.
 	t = (-b + e) / denominator;
 
-	if (t > EPSILON)
+	if (t > Epsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;

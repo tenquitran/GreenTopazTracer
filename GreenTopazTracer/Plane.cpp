@@ -7,7 +7,7 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 // Epsilon for intersection calculations, etc.
-const VComponent Plane::EPSILON = 0.001;
+const VComponent Plane::Epsilon = 0.001;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ bool Plane::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 {
 	VComponent t = Vector3::dot(m_center - ray.m_origin, m_normal) / Vector3::dot(ray.m_direction, m_normal);
 
-	if (t > EPSILON)
+	if (t > Epsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = m_normal;

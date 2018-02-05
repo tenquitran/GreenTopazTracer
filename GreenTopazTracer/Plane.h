@@ -22,6 +22,6 @@ namespace GreenTopazTracerApp
 		Vector3 m_normal;
 
 		// Epsilon for intersection calculations, etc.
-		static const VComponent EPSILON;
+		static const VComponent Epsilon;
 	};
 }

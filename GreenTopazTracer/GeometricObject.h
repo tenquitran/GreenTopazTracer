@@ -21,4 +21,6 @@ namespace GreenTopazTracerApp
 		// For a plane, any point that belong to a plane.
 		Vector3 m_center;
 	};
+
+	typedef std::unique_ptr<GeometricObject> GeometricObjectUPtr;
 }

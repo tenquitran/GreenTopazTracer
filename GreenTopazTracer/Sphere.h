@@ -21,6 +21,6 @@ namespace GreenTopazTracerApp
 		VComponent m_radius;
 
 		// Epsilon for intersection calculations, etc.
-		static const VComponent EPSILON;
+		static const VComponent Epsilon;
 	};
 }

@@ -9,12 +9,13 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow)
-	: m_hAppInstance(hInstance), m_hMainWindow(nullptr)
+MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight)
+	: m_hAppInstance(hInstance), m_hMainWindow(nullptr), m_clientWidth(clientWidth), m_clientHeight(clientHeight)
 {
 	// Initialize global strings.
-	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MAX_LOADSTRING);
-	LoadString(m_hAppInstance, IDC_GREENTOPAZTRACER, m_windowClassName, MAX_LOADSTRING);
+	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);
+	LoadString(m_hAppInstance, IDC_GREENTOPAZTRACER, m_windowClassName, MaxLoadString);
+
 	registerWndClass();
 
 	// Perform application initialization.
@@ -51,9 +52,23 @@ ATOM MainWindow::registerWndClass()
 
 BOOL MainWindow::initInstance(int nCmdShow)
 {
+	// Create the window with the client area of the specified size.
+
+	const DWORD WindowStyle = WS_POPUPWINDOW | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
+
+	RECT wndRect = { 0, 0, m_clientWidth, m_clientHeight };
+
+	BOOL res = AdjustWindowRect(&wndRect, WindowStyle, TRUE);
+	if (!res)
+	{
+		std::wcerr << L"AdjustWindowRect() failed: " << GetLastError() << std::endl;
+		return FALSE;
+	}
+
 	// Pass pointer to this class instance in the last argument of CreateWindow().
-	m_hMainWindow = CreateWindow(m_windowClassName, m_titleBarStr, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, this);
+	m_hMainWindow = CreateWindow(m_windowClassName, m_titleBarStr, WindowStyle,
+		CW_USEDEFAULT, CW_USEDEFAULT, wndRect.right - wndRect.left, wndRect.bottom - wndRect.top,
+		nullptr, nullptr, m_hAppInstance, this);
 	if (!m_hMainWindow)
 	{
 		std::wcerr << L"CreateWindow() failed: " << GetLastError() << std::endl;
@@ -126,6 +141,13 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 		hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code here...
 		EndPaint(hWnd, &ps);
+		break;
+	case WM_SIZE:
+		if (pMainWnd)
+		{
+			pMainWnd->m_clientWidth  = LOWORD(lParam);
+			pMainWnd->m_clientHeight = HIWORD(lParam);
+		}
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);

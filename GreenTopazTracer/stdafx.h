@@ -25,6 +25,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Exception.h"
 
@@ -39,3 +40,5 @@
 #include "GeometricObject.h"
 #include "Plane.h"
 #include "Sphere.h"
+
+#include "Scene.h"

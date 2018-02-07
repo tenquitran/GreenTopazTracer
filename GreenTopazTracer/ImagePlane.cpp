@@ -52,3 +52,26 @@ void ImagePlane::setPixelColor(int index, const Color& clr)
 
 	m_ppPlane[index] = clr;
 }
+
+std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const
+{
+	stride = (HorizontalRes * 24 + 7) / 8;
+
+	bufferSize = VerticalRes * stride;
+
+	std::unique_ptr<BYTE[]> spBuffer = std::make_unique<BYTE[]>(bufferSize);
+
+	UINT colorOffset = {};
+
+	for (int i = 0; i < ElementCount; ++i)
+	{
+		COLORREF rgb = getPixelColor(i).toRGB();
+
+		// Buffer should be in the BGR format.
+		spBuffer[colorOffset++] = GetBValue(rgb);
+		spBuffer[colorOffset++] = GetGValue(rgb);
+		spBuffer[colorOffset++] = GetRValue(rgb);
+	}
+
+	return spBuffer;
+}

@@ -26,10 +26,18 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		const int ImageWidth  = 800;
 		const int ImageHeight = 600;
 
-		// TODO: temp
-		//ImagePlane imagePlane(1, 1);
+		// TODO: temp. Testing the tracer code.
+		// Later we'll start tracing on receiving some window message, etc.
+		GreenTopazTracer tracer(ImageWidth, ImageHeight);
+		tracer.traceScene();
 
-		ImagePlane imagePlane(ImageWidth, ImageHeight);
+		// TODO: temp. Testing exporting of the resulting image.
+		UINT stride = {};
+		UINT bufferSize = {};
+		std::unique_ptr<BYTE[]> spImageData = tracer.exportForWicImageProcessor(stride, bufferSize);
+		ImageProcessor imgProcessor;
+		const std::wstring filePath = L"file1.png";
+		bool resExport = imgProcessor.saveAsPng(filePath, ImageWidth, ImageHeight, spImageData, stride, bufferSize);
 
 		// TODO: temp
 		MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight);

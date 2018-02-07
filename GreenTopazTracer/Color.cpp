@@ -21,3 +21,8 @@ Color::Color(ClrComponentType red, ClrComponentType green, ClrComponentType blue
 	: m_red(red), m_green(green), m_blue(blue)
 {
 }
+
+COLORREF Color::toRGB() const
+{
+	return RGB(m_red * 255, m_green * 255, m_blue * 255);
+}

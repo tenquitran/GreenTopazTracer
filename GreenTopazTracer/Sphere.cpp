@@ -47,6 +47,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;
 		hitInfo.m_localHitPoint = ray.m_origin + t * ray.m_direction;
+		hitInfo.m_pHit = this;
 		return true;
 	}
 
@@ -58,6 +59,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;
 		hitInfo.m_localHitPoint = ray.m_origin + t * ray.m_direction;
+		hitInfo.m_pHit = this;
 		return true;
 	}
 

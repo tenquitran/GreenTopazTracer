@@ -26,7 +26,7 @@ Ray::Ray(const Vector3& origin, const Vector3& direction/*, const Color& intensi
 
 // TODO: don't delete
 #if 0
-bool Ray::IsIntensityTooLow() const
+bool Ray::isIntensityTooLow() const
 {
 	return (   m_intensity.m_red   <= INTENSITY_THRESHOLD
 		    && m_intensity.m_green <= INTENSITY_THRESHOLD

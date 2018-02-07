@@ -26,6 +26,14 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <limits>
+
+// ATL and COM functionality for WIC-based ImageProcessor.
+#include <Objbase.h>
+#include <comdef.h>
+#include <atlbase.h>
+
+#include <Wincodec.h>
 
 #include "Exception.h"
 
@@ -42,3 +50,5 @@
 #include "Sphere.h"
 
 #include "Scene.h"
+
+#include "ImageProcessor.h"

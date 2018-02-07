@@ -16,6 +16,9 @@ namespace GreenTopazTracerApp
 
 		Color(ClrComponentType red, ClrComponentType green, ClrComponentType blue);
 
+		// Convert color values to the RGB format used in Windows.
+		COLORREF toRGB() const;
+
 	public:
 		ClrComponentType m_red;
 		ClrComponentType m_green;

@@ -8,5 +8,6 @@ using namespace GreenTopazTracerApp;
 
 
 HitInfo::HitInfo()
+	: m_pHit(nullptr)
 {
 }

@@ -13,7 +13,7 @@ namespace GreenTopazTracerApp
 		// TODO: don't delete
 #if 0
 		// Returns true if the ray intensity is too low to significantly contribute to the scene rendering.
-		bool IsIntensityTooLow() const;
+		bool isIntensityTooLow() const;
 #endif
 
 	public:

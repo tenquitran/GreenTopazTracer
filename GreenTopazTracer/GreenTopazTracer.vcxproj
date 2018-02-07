@@ -85,6 +85,7 @@
     <ClInclude Include="GreenTopazTracer.h" />
     <ClInclude Include="HitInfo.h" />
     <ClInclude Include="ImagePlane.h" />
+    <ClInclude Include="ImageProcessor.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Ray.h" />
@@ -103,6 +104,7 @@
     <ClCompile Include="GreenTopazTracer.cpp" />
     <ClCompile Include="HitInfo.cpp" />
     <ClCompile Include="ImagePlane.cpp" />
+    <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Ray.cpp" />

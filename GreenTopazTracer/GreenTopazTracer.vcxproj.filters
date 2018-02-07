@@ -31,6 +31,9 @@
     <Filter Include="Color">
       <UniqueIdentifier>{5a0616be-5012-4aa5-afb1-1d3e97a67358}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImageExport">
+      <UniqueIdentifier>{29f0f4fb-634b-4e1c-8824-15292d2d2d9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -81,6 +84,9 @@
     <ClInclude Include="Plane.h">
       <Filter>GeometricObjects</Filter>
     </ClInclude>
+    <ClInclude Include="ImageProcessor.h">
+      <Filter>ImageExport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>GeometricObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessor.cpp">
+      <Filter>ImageExport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

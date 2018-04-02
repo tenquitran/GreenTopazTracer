@@ -27,6 +27,7 @@
 #include <vector>
 #include <memory>
 #include <limits>
+#include <random>
 
 // ATL and COM functionality for WIC-based ImageProcessor.
 #include <Objbase.h>
@@ -52,3 +53,5 @@
 #include "Scene.h"
 
 #include "ImageProcessor.h"
+
+#include "Sampler.h"

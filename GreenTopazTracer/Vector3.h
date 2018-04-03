@@ -6,6 +6,8 @@ namespace GreenTopazTracerApp
 	// Vector component data type.
 	typedef double VComponent;
 
+	// Pixel coordinates (X and Y respectively).
+	typedef std::pair<VComponent, VComponent> Pixel;
 
 	struct Vector3
 	{

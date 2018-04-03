@@ -26,13 +26,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		const int ImageWidth  = 800;
 		const int ImageHeight = 600;
 
-#if 0
-		// TODO: temp. Testing the multisampling code.
-		Sampler sampler(ImageWidth, ImageHeight, 9);
-		std::vector< std::pair<VComponent, VComponent> > samples1 = sampler.getSamples_Jittered();
-		std::vector< std::pair<VComponent, VComponent> > samples2 = sampler.getSamples_Jittered();
-#endif
-
 		// TODO: temp. Testing the tracer code.
 		// Later we'll start tracing on receiving some window message, etc.
 		GreenTopazTracer tracer(ImageWidth, ImageHeight);

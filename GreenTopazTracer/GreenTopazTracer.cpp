@@ -36,7 +36,7 @@ void GreenTopazTracer::traceScene()
 
 	const int SampleCount = 9;
 
-	Sampler sampler(HorizRes, VertRes, SampleCount);
+	Sampler sampler(SampleCount);
 
 	int index = {};    // index of the image plane element
 
@@ -45,11 +45,11 @@ void GreenTopazTracer::traceScene()
 		for (int col = 0; col < HorizRes; ++col)
 		{
 			VComponent x = PixelSize * (col - 0.5 * (HorizRes - 1.0));
-			VComponent y = PixelSize * (row - 0.5 * (VertRes - 1.0));
+			VComponent y = PixelSize * (row - 0.5 * (VertRes  - 1.0));
 
-			// Generate samples inside the pixel and trace rays from them.
+			// Generate samples inside the pixel and trace rays from these samples.
 
-			std::vector< std::pair<VComponent, VComponent> > samples = sampler.getSamples_Jittered(x, y);
+			std::vector<Pixel> samples = sampler.getSamples_Jittered(x, y);
 
 			std::vector<Color> sampleColors;
 			sampleColors.reserve(SampleCount);
@@ -67,18 +67,15 @@ void GreenTopazTracer::traceScene()
 
 			// Average the sample colors.
 
-			ClrComponentType red = {};
-			ClrComponentType green = {};
-			ClrComponentType blue = {};
+			Color clr;
 
 			for (const auto& itr : sampleColors)
 			{
-				red   += itr.m_red;
-				green += itr.m_green;
-				blue  += itr.m_blue;
+				clr += itr;
 			}
 
-			m_imagePlane.setPixelColor(index++, Color(red / SampleCount, green / SampleCount, blue / SampleCount));
+			m_imagePlane.setPixelColor(index++, clr / SampleCount);
+			//m_imagePlane.setPixelColor(index++, Color(clr.m_red / SampleCount, clr.m_green / SampleCount, clr.m_blue / SampleCount));
 		}
 	}
 #else

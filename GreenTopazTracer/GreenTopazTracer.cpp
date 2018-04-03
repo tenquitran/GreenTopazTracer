@@ -25,11 +25,9 @@ void GreenTopazTracer::traceScene()
 	const VComponent ViewZ = 100.0;
 
 	const int HorizRes = m_imagePlane.HorizontalRes;
-	const int VertRes  = m_imagePlane.VerticalRes;
+	const int VertRes = m_imagePlane.VerticalRes;
 
 	const VComponent PixelSize = m_imagePlane.PixelSize;
-
-	int index = {};    // index of the image plane element
 
 #if 1
 	// Using multisampling.
@@ -40,44 +38,58 @@ void GreenTopazTracer::traceScene()
 
 	Sampler sampler(HorizRes, VertRes, SampleCount);
 
-	for (int i = 0; i < PixelCount; ++i)
+	int index = {};    // index of the image plane element
+
+	for (int row = 0; row < VertRes; ++row)
 	{
-		// Generate sample coordinates and trace rays from them.
-
-		std::vector< std::pair<VComponent, VComponent> > samples = sampler.getSamples_Jittered();
-
-		std::vector<Color> sampleColors;
-		sampleColors.reserve(SampleCount);
-
-		for (const auto& itr : samples)
+		for (int col = 0; col < HorizRes; ++col)
 		{
-			Vector3 origin = Vector3(itr.first, itr.second, ViewZ);
+			VComponent x = PixelSize * (col - 0.5 * (HorizRes - 1.0));
+			VComponent y = PixelSize * (row - 0.5 * (VertRes - 1.0));
 
-			Ray ray(origin, RayDirection);
+			// Generate samples inside the pixel and trace rays from them.
 
-			Color color = traceRay(ray, 0);
+			std::vector< std::pair<VComponent, VComponent> > samples = sampler.getSamples_Jittered(x, y);
 
-			sampleColors.push_back(color);
+			std::vector<Color> sampleColors;
+			sampleColors.reserve(SampleCount);
+
+			for (const auto& itr : samples)
+			{
+				Vector3 origin = Vector3(itr.first, itr.second, ViewZ);
+
+				Ray ray(origin, RayDirection);
+
+				Color color = traceRay(ray, 0);
+
+				sampleColors.push_back(color);
+			}
+
+			// Average the sample colors.
+
+			ClrComponentType red = {};
+			ClrComponentType green = {};
+			ClrComponentType blue = {};
+
+			for (const auto& itr : sampleColors)
+			{
+				red   += itr.m_red;
+				green += itr.m_green;
+				blue  += itr.m_blue;
+			}
+
+			m_imagePlane.setPixelColor(index++, Color(red / SampleCount, green / SampleCount, blue / SampleCount));
 		}
-
-		// Average the sample colors.
-
-		ClrComponentType red   = {};
-		ClrComponentType green = {};
-		ClrComponentType blue  = {};
-
-		for (const auto& itr : sampleColors)
-		{
-			red   += itr.m_red;
-			green += itr.m_green;
-			blue  += itr.m_blue;
-		}
-
-		m_imagePlane.setPixelColor(index++, Color(red / SampleCount, green / SampleCount, blue / SampleCount));
 	}
 #else
 	// Suppose the origin of the image plane is at its lower left corner.
 	// Trace rays according to rows and columns of the image plane.
+
+	int index = {};    // index of the image plane element
+
+	// TODO: temp
+	//VComponent x = {};
+	//VComponent y = {};
 
 	for (int row = 0; row < VertRes; ++row)
 	{
@@ -91,11 +103,6 @@ void GreenTopazTracer::traceScene()
 			Ray ray(origin, RayDirection);
 
 			Color pixelColor = traceRay(ray, 0);
-
-			if (1.0 == pixelColor.m_red)
-			{
-				int tmp = 1;
-			}
 
 			m_imagePlane.setPixelColor(index++, pixelColor);
 		}

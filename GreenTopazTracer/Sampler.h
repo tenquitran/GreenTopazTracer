@@ -12,8 +12,12 @@ namespace GreenTopazTracerApp
 
 		virtual ~Sampler();
 
+		// TODO: remove
 		// Get samples for the next pixel using the jittered sampling method.
-		std::vector< std::pair<VComponent, VComponent> > getSamples_Jittered();
+		std::vector< std::pair<VComponent, VComponent> > getSamples_Jittered1();
+
+		// Get samples for the next pixel using the jittered sampling method.
+		std::vector< std::pair<VComponent, VComponent> > getSamples_Jittered(VComponent pixelX, VComponent pixelY);
 
 	private:
 		Sampler(const Sampler&) = delete;

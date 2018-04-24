@@ -41,6 +41,10 @@ namespace GreenTopazTracerApp
 		DWORD threadProc();
 #endif
 
+		// Get row and column of the next pixel.
+		// Returns: true if there are more pixels, false once the image plane is completely processed.
+		bool getCoordinates(LONG& row, LONG& column);
+
 	private:
 		ImagePlane m_imagePlane;
 
@@ -56,23 +60,15 @@ namespace GreenTopazTracerApp
 
 		// TODO: use multithreading.
 #if 1
-
 		// TODO: pre-computing pixel coordinates. Is there a more efficient solution?
 		std::vector< std::pair<VComponent, VComponent> > m_pixelCoords;
 
 		// Counter for the currently processed pixel. 
-#if 1
-#ifdef _WIN64
-#pragma pack(push, 8)
-#else
-#pragma pack(push, 4)
-#endif
-		volatile LONG m_currentPixel;
-#pragma pack(pop)
-#else
-		std::atomic<long> m_currentPixel;
-#endif
+		__declspec(align(4)) volatile LONG m_currentPixel;
 
+		// Current values of pixel row and column.
+		__declspec(align(4)) volatile LONG m_row;
+		__declspec(align(4)) volatile LONG m_column;
 #endif
 	};
 }

@@ -26,6 +26,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		const int ImageWidth  = 800;
 		const int ImageHeight = 600;
 
+#if 0
+		// TODO: temp
+		DWORD tick1 = GetTickCount();
+
 		// TODO: temp. Testing the tracer code.
 		// Later we'll start tracing on receiving some window message, etc.
 		GreenTopazTracer tracer(ImageWidth, ImageHeight);
@@ -38,6 +42,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		ImageProcessor imgProcessor;
 		const std::wstring filePath = L"file1.png";
 		bool resExport = imgProcessor.saveAsPng(filePath, ImageWidth, ImageHeight, spImageData, stride, bufferSize);
+
+		// TODO: temp
+		DWORD tick2 = GetTickCount() - tick1;
+#endif
 
 		// TODO: temp
 		MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight);

@@ -12,6 +12,12 @@ GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight)
 	: m_imagePlane(imageWidth, imageHeight), m_maxTracingSteps(10),
 	  m_horizontalResolution{}, m_verticalResolution{}, m_pixelCount{}
 {
+	m_evTracingComplete.Attach(CreateEvent(nullptr, TRUE, FALSE, nullptr));
+	if (!m_evTracingComplete)
+	{
+		assert(false); throw EXCEPTION_FMT(L"CreateEvent() failed: %u", GetLastError());
+	}
+
 	InterlockedExchange(&m_currentPixel, 0L);
 	InterlockedExchange(&m_row, 0L);
 	InterlockedExchange(&m_column, 0L);
@@ -26,7 +32,7 @@ GreenTopazTracer::~GreenTopazTracer()
 {
 }
 
-bool GreenTopazTracer::getCoordinates(LONG& row, LONG& column)
+bool GreenTopazTracer::getRowAndColumn(LONG& row, LONG& column)
 {
 	row    = InterlockedExchange(&m_row, m_row);
 	column = InterlockedExchange(&m_column, m_column);
@@ -44,8 +50,6 @@ bool GreenTopazTracer::getCoordinates(LONG& row, LONG& column)
 	return true;
 }
 
-// TODO: use multithreading.
-#if 1
 DWORD WINAPI GreenTopazTracer::threadProc(LPVOID pArg)
 {
 	GreenTopazTracer *pTracer = (GreenTopazTracer *)pArg;
@@ -70,7 +74,6 @@ DWORD GreenTopazTracer::threadProc()
 
 	Sampler sampler(SampleCount);
 
-#if 1
 	LONG row = {}, column = {};
 
 	bool toContinue = true;
@@ -83,7 +86,7 @@ DWORD GreenTopazTracer::threadProc()
 			return 0;
 		}
 
-		toContinue = getCoordinates(row, column);
+		toContinue = getRowAndColumn(row, column);
 		if (!toContinue)
 		{
 			break;
@@ -122,51 +125,11 @@ DWORD GreenTopazTracer::threadProc()
 		m_imagePlane.setPixelColor(previousCounter++, clr / SampleCount);
 		
 	} while (toContinue);
-#else
-	while (true)
-	{
-		LONG previousCounter = InterlockedIncrement(&m_currentPixel);
-		if (previousCounter >= m_pixelCount)
-		{
-			return 0;
-		}
 
-		std::pair<VComponent, VComponent> coords = m_pixelCoords[previousCounter];
-
-		// Generate samples inside the pixel and trace rays from these samples.
-
-		std::vector<Pixel> samples = sampler.getSamples_Jittered(coords.first, coords.second);
-
-		std::vector<Color> sampleColors;
-		sampleColors.reserve(SampleCount);
-
-		for (const auto& itr : samples)
-		{
-			Vector3 origin = Vector3(itr.first, itr.second, ViewZ);
-
-			Ray ray(origin, RayDirection);
-
-			Color color = traceRay(ray, 0);
-
-			sampleColors.push_back(color);
-		}
-
-		// Average the sample colors.
-
-		Color clr;
-
-		for (const auto& itr : sampleColors)
-		{
-			clr += itr;
-		}
-
-		m_imagePlane.setPixelColor(previousCounter++, clr / SampleCount);
-	}
-#endif
+	SetEvent(m_evTracingComplete);
 
 	return 0;
 }
-#endif 	  // TODO: use multithreading.
 
 void GreenTopazTracer::traceScene()
 {
@@ -174,9 +137,6 @@ void GreenTopazTracer::traceScene()
 
 	// Z coordinate of the view plane.
 	const VComponent ViewZ = 100.0;
-
-	//const int HorizRes = m_imagePlane.HorizontalRes;
-	//const int VertRes = m_imagePlane.VerticalRes;
 
 	const VComponent PixelSize = m_imagePlane.PixelSize;
 
@@ -200,9 +160,10 @@ void GreenTopazTracer::traceScene()
 	}
 #endif
 
-	m_pixelCoords.reserve(m_pixelCount);
+	//m_pixelCoords.reserve(m_pixelCount);
 
-#if 1
+#if 0     // single-threaded
+
 	// Using multisampling.
 
 	//const int PixelCount = m_horizontalResolution * m_verticalResolution;
@@ -217,12 +178,6 @@ void GreenTopazTracer::traceScene()
 	{
 		for (int col = 0; col < m_horizontalResolution; ++col)
 		{
-#if 1    // use multithreading
-			VComponent x = PixelSize * (col - 0.5 * (m_horizontalResolution - 1.0));
-			VComponent y = PixelSize * (row - 0.5 * (m_verticalResolution   - 1.0));
-
-			m_pixelCoords.push_back(std::pair<VComponent, VComponent>(x, y));
-#else
 			VComponent x = PixelSize * (col - 0.5 * (m_horizontalResolution - 1.0));
 			VComponent y = PixelSize * (row - 0.5 * (m_verticalResolution   - 1.0));
 
@@ -254,12 +209,10 @@ void GreenTopazTracer::traceScene()
 			}
 
 			m_imagePlane.setPixelColor(index++, clr / SampleCount);
-#endif
 		}
 	}
+#else    // TODO: use multithreading.
 
-	// TODO: use multithreading.
-#if 1
 	for (int i = 0; i < ThreadCount; ++i)
 	{
 		if ((DWORD)-1 == ResumeThread(threads[i]))
@@ -269,6 +222,8 @@ void GreenTopazTracer::traceScene()
 		}
 	}
 
+	// TODO: remove. The main window will perform waiting.
+#if 0
 	DWORD waitRes = WaitForMultipleObjects(_countof(threadHandles), threadHandles, TRUE, 60000);
 	switch (waitRes)
 	{
@@ -278,37 +233,9 @@ void GreenTopazTracer::traceScene()
 	case WAIT_FAILED:
 		std::cout << "Error" << std::endl;
 		break;
-		}
+	}
 #endif
 
-#else
-	// TODO: don't delete. The edges are somewhat more accurate than with one-pixel jittered sampling.
-
-	// Suppose the origin of the image plane is at its lower left corner.
-	// Trace rays according to rows and columns of the image plane.
-
-	int index = {};    // index of the image plane element
-
-	// TODO: temp
-	//VComponent x = {};
-	//VComponent y = {};
-
-	for (int row = 0; row < VertRes; ++row)
-	{
-		for (int col = 0; col < HorizRes; ++col)
-		{
-			VComponent x = PixelSize * (col - 0.5 * (HorizRes - 1.0));
-			VComponent y = PixelSize * (row - 0.5 * (VertRes - 1.0));
-
-			Vector3 origin = Vector3(x, y, ViewZ);
-
-			Ray ray(origin, RayDirection);
-
-			Color pixelColor = traceRay(ray, 0);
-
-			m_imagePlane.setPixelColor(index++, pixelColor);
-		}
-	}
 #endif
 
 	int tmp = 1;

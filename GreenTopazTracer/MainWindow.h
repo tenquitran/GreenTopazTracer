@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GreenTopazTracer.h"
+
 
 namespace GreenTopazTracerApp
 {
@@ -39,5 +41,8 @@ namespace GreenTopazTracerApp
 		// Width and height of the window.
 		int m_clientWidth;
 		int m_clientHeight;
+
+		// Ray tracer.
+		GreenTopazTracer m_tracer;
 	};
 }

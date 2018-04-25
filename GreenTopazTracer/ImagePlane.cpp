@@ -12,6 +12,8 @@ ImagePlane::ImagePlane(int horizontalRes, int verticalRes)
 	: HorizontalRes(horizontalRes), VerticalRes(verticalRes), PixelSize(1.0), 
 	  ElementCount(horizontalRes * verticalRes), m_ppPlane(nullptr)
 {
+	InitializeCriticalSection(&m_lock);
+
 	if (   HorizontalRes <= 0
 		|| VerticalRes   <= 0)
 	{
@@ -29,6 +31,8 @@ ImagePlane::~ImagePlane()
 	{
 		delete[] m_ppPlane;
 	}
+
+	DeleteCriticalSection(&m_lock);
 }
 
 Color ImagePlane::getPixelColor(int index) const
@@ -50,7 +54,11 @@ void ImagePlane::setPixelColor(int index, const Color& clr)
 		assert(false); return;
 	}
 
+	EnterCriticalSection(&m_lock);
+
 	m_ppPlane[index] = clr;
+
+	LeaveCriticalSection(&m_lock);
 }
 
 std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const
@@ -63,6 +71,8 @@ std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UIN
 
 	UINT colorOffset = {};
 
+	EnterCriticalSection(&m_lock);
+
 	for (int i = 0; i < ElementCount; ++i)
 	{
 		COLORREF rgb = getPixelColor(i).toRGB();
@@ -72,6 +82,24 @@ std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UIN
 		spBuffer[colorOffset++] = GetGValue(rgb);
 		spBuffer[colorOffset++] = GetRValue(rgb);
 	}
+
+	LeaveCriticalSection(&m_lock);
+
+	return spBuffer;
+}
+
+std::unique_ptr<COLORREF[]> ImagePlane::getRawData() const
+{
+	std::unique_ptr<COLORREF[]> spBuffer = std::make_unique<COLORREF[]>(ElementCount);
+
+	EnterCriticalSection(&m_lock);
+
+	for (int i = 0; i < ElementCount; ++i)
+	{
+		spBuffer[i] = getPixelColor(i).toRGB();
+	}
+
+	LeaveCriticalSection(&m_lock);
 
 	return spBuffer;
 }

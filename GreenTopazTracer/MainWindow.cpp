@@ -10,7 +10,9 @@ using namespace GreenTopazTracerApp;
 
 
 MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight)
-	: m_hAppInstance(hInstance), m_hMainWindow(nullptr), m_clientWidth(clientWidth), m_clientHeight(clientHeight)
+	: m_hAppInstance(hInstance), m_hMainWindow(nullptr), 
+	  m_clientWidth(clientWidth), m_clientHeight(clientHeight),
+	  m_tracer(clientWidth, clientHeight)
 {
 	// Initialize global strings.
 	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);
@@ -87,6 +89,58 @@ int MainWindow::runMessageLoop()
 {
 	HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_GREENTOPAZTRACER));
 
+#if 1
+	BOOL exit = FALSE;
+	DWORD exitCode = {};
+
+	MSG msg = {};
+
+	while (!exit)
+	{
+		DWORD waitStatus = MsgWaitForMultipleObjects(1, &m_tracer.m_evTracingComplete.m_h, FALSE, 10000, QS_ALLEVENTS);
+
+		switch (waitStatus)
+		{
+		case WAIT_OBJECT_0 + 1:    // message arrived
+			while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))    // get next message in the queue
+			{
+				if (WM_QUIT == msg.message)
+				{
+					exit = TRUE;
+					exitCode = msg.wParam;
+					break;
+				}
+
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			break;
+		case WAIT_OBJECT_0:        // ray tracing complete
+			{
+				// Export the resulting image.
+				UINT stride = {};
+				UINT bufferSize = {};
+
+				std::unique_ptr<BYTE[]> spImageData = m_tracer.exportForWicImageProcessor(stride, bufferSize);
+
+				ImageProcessor imgProcessor;
+				const std::wstring filePath = L"file1.png";
+
+				bool res = imgProcessor.saveAsPng(filePath, m_tracer.getHorizontalResolution(), m_tracer.getVerticalResolution(), 
+					spImageData, stride, bufferSize);
+				assert(res);
+			}
+			break;
+		case WAIT_TIMEOUT:
+			break;
+		default:
+			// TODO: error - unexpected wait status
+			break;
+		}
+	}
+
+	return (int)exitCode;
+#else
 	MSG msg;
 
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -99,6 +153,7 @@ int MainWindow::runMessageLoop()
 	}
 
 	return (int)msg.wParam;
+#endif
 }
 
 LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -119,6 +174,8 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 			std::wcerr << L"Main window pointer is NULL\n";
 			assert(false);
 		}
+
+		pMainWnd->m_tracer.traceScene();
 		break;
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
@@ -138,9 +195,18 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 		}
 		break;
 	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code here...
-		EndPaint(hWnd, &ps);
+		{
+			hdc = BeginPaint(hWnd, &ps);
+
+			// TODO: uncomment
+#if 1
+			std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData();
+#endif
+
+			;
+
+			EndPaint(hWnd, &ps);
+		}
 		break;
 	case WM_SIZE:
 		if (pMainWnd)

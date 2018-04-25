@@ -13,6 +13,16 @@ namespace GreenTopazTracerApp
 
 		virtual ~ImagePlane();
 
+		int getHorizontalResolution() const
+		{
+			return HorizontalRes;
+		}
+
+		int getVerticalResolution() const
+		{
+			return VerticalRes;
+		}
+
 		Color getPixelColor(int index) const;
 
 		void setPixelColor(int index, const Color& clr);
@@ -22,6 +32,9 @@ namespace GreenTopazTracerApp
 		//             bufferSize - size of the returned data buffer, in bytes.
 		// Returns: the image data buffer.
 		std::unique_ptr<BYTE[]> exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const;
+
+		// Get raw image data (RGB format).
+		std::unique_ptr<COLORREF[]> getRawData() const;
 
 	private:
 		ImagePlane(const ImagePlane&) = delete;
@@ -44,9 +57,9 @@ namespace GreenTopazTracerApp
 		// Image plane elements.
 		Color *m_ppPlane;
 
-#if 0
-		// Copy of the image plane data to work with the WIC image exporter. Uses the BGR format.
-		std::unique_ptr<BYTE[]> m_spBufferForWicExporter;
-#endif
+		// Lock for readers and writers.
+		// Note that writers by themselves don't need it - they work with pixel indices.
+		// It's reading that needs a lock.
+		mutable CRITICAL_SECTION m_lock;
 	};
 }

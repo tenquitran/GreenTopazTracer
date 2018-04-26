@@ -9,9 +9,11 @@ namespace GreenTopazTracerApp
 	{
 	public:
 		// Parameters: imageWidth  - width of the image to trace (in pixels);
-		//             imageHeight - height of the image to trace (in pixels).
+		//             imageHeight - height of the image to trace (in pixels);
+		//             threadCount - number of threads to perform ray tracing;
+		//             maxTracingSteps - maximum number of steps for ray tracing.
 		// Throws: Exception, std::bad_alloc
-		GreenTopazTracer(int imageWidth, int imageHeight);
+		GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps);
 
 		virtual ~GreenTopazTracer();
 
@@ -28,9 +30,10 @@ namespace GreenTopazTracerApp
 		}
 
 		// Get raw image data (RGB format).
-		std::unique_ptr<COLORREF[]> getRawData() const
+		// Parameters: size - number of elements.
+		std::unique_ptr<COLORREF[]> getRawData(size_t& size) const
 		{
-			return m_imagePlane.getRawData();
+			return m_imagePlane.getRawData(size);
 		}
 
 		int getHorizontalResolution() const
@@ -41,6 +44,11 @@ namespace GreenTopazTracerApp
 		int getVerticalResolution() const
 		{
 			return m_imagePlane.getVerticalResolution();
+		}
+
+		const int getThreadCount() const
+		{
+			return ThreadCount;
 		}
 
 	private:
@@ -60,16 +68,18 @@ namespace GreenTopazTracerApp
 		bool getRowAndColumn(LONG& row, LONG& column);
 
 	public:
-		// Event for completion of the ray tracing.
-		CHandle m_evTracingComplete;
+		std::vector<CHandle> m_threads;
 
 	private:
 		ImagePlane m_imagePlane;
 
 		Scene m_scene;
 
-		// Maximum number of steps for ray tracing. Note: can be changed by the user.
-		int m_maxTracingSteps;
+		// Number of threads to perform ray tracing.
+		const int ThreadCount;
+
+		// Maximum number of steps for ray tracing.
+		const int MaxTracingSteps;
 
 		int m_horizontalResolution;
 		int m_verticalResolution;

@@ -47,7 +47,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		DWORD tick2 = GetTickCount() - tick1;
 #endif
 
-		// TODO: temp
 		MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight);
 
 		//imagePlane.setPixelColor(0, 0, Color(1, 1, 1));

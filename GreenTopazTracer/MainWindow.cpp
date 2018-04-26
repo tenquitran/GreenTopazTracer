@@ -8,11 +8,17 @@ using namespace GreenTopazTracerApp;
 
 //////////////////////////////////////////////////////////////////////////
 
+// Timer to display ray tracing results.
+#define IDT_TRACE_RESULT_TIMER   2010
+
+//////////////////////////////////////////////////////////////////////////
+
 
 MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight)
 	: m_hAppInstance(hInstance), m_hMainWindow(nullptr), 
 	  m_clientWidth(clientWidth), m_clientHeight(clientHeight),
-	  m_tracer(clientWidth, clientHeight)
+	  m_tracer(clientWidth, clientHeight, 
+	  4, 10)    // TODO: hard-coded
 {
 	// Initialize global strings.
 	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);
@@ -24,6 +30,11 @@ MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int c
 	if (!initInstance(nCmdShow))
 	{
 		assert(false); throw EXCEPTION(L"initInstance() failed");
+	}
+
+	if (!SetTimer(m_hMainWindow, IDT_TRACE_RESULT_TIMER, 500, (TIMERPROC)nullptr))
+	{
+		assert(false); throw EXCEPTION_FMT(L"SetTimer() failed: %u", GetLastError());
 	}
 }
 
@@ -95,26 +106,16 @@ int MainWindow::runMessageLoop()
 
 	MSG msg = {};
 
+	// We rely on the fact that if any thread exits, the ray tracing is finished.
+	HANDLE hThread = m_tracer.m_threads[0];
+
 	while (!exit)
 	{
-		DWORD waitStatus = MsgWaitForMultipleObjects(1, &m_tracer.m_evTracingComplete.m_h, FALSE, 10000, QS_ALLEVENTS);
+		DWORD waitStatus = MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, QS_ALLEVENTS);
+		//DWORD waitStatus = MsgWaitForMultipleObjects(ThreadCount, &m_tracer.m_evTracingComplete.m_h, FALSE, 10000, QS_ALLEVENTS);
 
 		switch (waitStatus)
 		{
-		case WAIT_OBJECT_0 + 1:    // message arrived
-			while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))    // get next message in the queue
-			{
-				if (WM_QUIT == msg.message)
-				{
-					exit = TRUE;
-					exitCode = msg.wParam;
-					break;
-				}
-
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			break;
 		case WAIT_OBJECT_0:        // ray tracing complete
 			{
 				// Export the resulting image.
@@ -128,19 +129,62 @@ int MainWindow::runMessageLoop()
 
 				bool res = imgProcessor.saveAsPng(filePath, m_tracer.getHorizontalResolution(), m_tracer.getVerticalResolution(), 
 					spImageData, stride, bufferSize);
-				assert(res);
+				if (!res)
+				{
+					std::wcerr << L"Failed to save the ray traced image\n";
+					assert(false); return 1;
+				}
+
+				// TODO: temp
+#if 0
+				HDC hdc = GetDC(m_hMainWindow);
+
+				const int HorizRes = m_tracer.getHorizontalResolution();
+				const int VertRes  = m_tracer.getVerticalResolution();
+
+				size_t imageSize = {};
+				std::unique_ptr<COLORREF[]> buff = m_tracer.getRawData(imageSize);
+
+				size_t offset = {};
+
+				for (int y = 0; y < VertRes; ++y)
+				{
+					for (int x = 0; x < HorizRes; ++x)
+					{
+						SetPixel(hdc, x, y, buff[offset++]);
+					}
+				}
+
+				ReleaseDC(m_hMainWindow, hdc);
+
+				Sleep(5000);
+#endif
 			}
-			break;
-		case WAIT_TIMEOUT:
-			break;
-		default:
-			// TODO: error - unexpected wait status
+			return 0;
+		case WAIT_FAILED:
+			std::wcerr << __FUNCTIONW__ << L"Unexpected wait status: " << waitStatus << '\n';
+			assert(false); return 2;
+		default:    // message arrived
+			while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))    // get next message in the queue
+			{
+				if (WM_QUIT == msg.message)
+				{
+					exit = TRUE;
+					exitCode = msg.wParam;
+					break;
+				}
+
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 			break;
 		}
 	}
 
 	return (int)exitCode;
 #else
+	// Without displaying ray tracing results.
+
 	MSG msg;
 
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -194,16 +238,56 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
+	case WM_TIMER:
+		switch (wParam)
+		{
+		case IDT_TRACE_RESULT_TIMER:
+			{
+				HDC hdc = GetDC(hWnd);
+
+				const int HorizRes = pMainWnd->m_tracer.getHorizontalResolution();
+				const int VertRes  = pMainWnd->m_tracer.getVerticalResolution();
+
+				size_t imageSize = {};
+				std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData(imageSize);
+
+				size_t offset = {};
+
+				for (int y = 0; y < VertRes; ++y)
+				{
+					for (int x = 0; x < HorizRes; ++x)
+					{
+						SetPixel(hdc, x, y, buff[offset++]);
+					}
+				}
+
+				ReleaseDC(hWnd, hdc);
+			}
+			return 0;
+		}
+		break;
 	case WM_PAINT:
 		{
 			hdc = BeginPaint(hWnd, &ps);
 
 			// TODO: uncomment
-#if 1
-			std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData();
-#endif
+#if 0
+			const int HorizRes = pMainWnd->m_tracer.getHorizontalResolution();
+			const int VertRes  = pMainWnd->m_tracer.getVerticalResolution();
 
-			;
+			size_t imageSize = {};
+			std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData(imageSize);
+
+			size_t offset = {};
+
+			for (int row = 0; row < VertRes; ++row)
+			{
+				for (int col = 0; col < HorizRes; ++col)
+				{
+					SetPixel(hdc, row, col, buff[offset++]);
+				}
+			}
+#endif
 
 			EndPaint(hWnd, &ps);
 		}

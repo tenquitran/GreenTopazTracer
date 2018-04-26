@@ -8,16 +8,11 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight)
-	: m_imagePlane(imageWidth, imageHeight), m_maxTracingSteps(10),
+GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps)
+	: m_imagePlane(imageWidth, imageHeight), 
+	  ThreadCount(threadCount), MaxTracingSteps(maxTracingSteps),
 	  m_horizontalResolution{}, m_verticalResolution{}, m_pixelCount{}
 {
-	m_evTracingComplete.Attach(CreateEvent(nullptr, TRUE, FALSE, nullptr));
-	if (!m_evTracingComplete)
-	{
-		assert(false); throw EXCEPTION_FMT(L"CreateEvent() failed: %u", GetLastError());
-	}
-
 	InterlockedExchange(&m_currentPixel, 0L);
 	InterlockedExchange(&m_row, 0L);
 	InterlockedExchange(&m_column, 0L);
@@ -126,8 +121,6 @@ DWORD GreenTopazTracer::threadProc()
 		
 	} while (toContinue);
 
-	SetEvent(m_evTracingComplete);
-
 	return 0;
 }
 
@@ -142,25 +135,18 @@ void GreenTopazTracer::traceScene()
 
 	// TODO: use multithreading.
 #if 1
-	const int ThreadCount = 4;    // TODO: hard-coded
-
-	CHandle threads[ThreadCount];
-	HANDLE threadHandles[ThreadCount];
+	m_threads.resize(ThreadCount);
 
 	for (int i = 0; i < ThreadCount; ++i)
 	{
-		threads[i].Attach(CreateThread(nullptr, 0, threadProc, this, CREATE_SUSPENDED, nullptr));
-		if (!threads[i])
+		m_threads[i].Attach(CreateThread(nullptr, 0, threadProc, this, CREATE_SUSPENDED, nullptr));
+		if (!m_threads[i])
 		{
-			// TODO: error
+			std::wcerr << __FUNCTIONW__ << L": CreateThread() failed: " << GetLastError() << '\n';
 			assert(false); return;
 		}
-
-		threadHandles[i] = threads[i].m_h;
 	}
 #endif
-
-	//m_pixelCoords.reserve(m_pixelCount);
 
 #if 0     // single-threaded
 
@@ -215,27 +201,12 @@ void GreenTopazTracer::traceScene()
 
 	for (int i = 0; i < ThreadCount; ++i)
 	{
-		if ((DWORD)-1 == ResumeThread(threads[i]))
+		if ((DWORD)-1 == ResumeThread(m_threads[i]))
 		{
 			// TODO: error
 			assert(false); return;
 		}
 	}
-
-	// TODO: remove. The main window will perform waiting.
-#if 0
-	DWORD waitRes = WaitForMultipleObjects(_countof(threadHandles), threadHandles, TRUE, 60000);
-	switch (waitRes)
-	{
-	case WAIT_TIMEOUT:
-		std::cout << "Timeout" << std::endl;
-		break;
-	case WAIT_FAILED:
-		std::cout << "Error" << std::endl;
-		break;
-	}
-#endif
-
 #endif
 
 	int tmp = 1;
@@ -243,7 +214,7 @@ void GreenTopazTracer::traceScene()
 
 Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const
 {
-	if (steps > m_maxTracingSteps)
+	if (steps > MaxTracingSteps)
 	{
 		return Color() /*m_backgroundColor*/;
 	}

@@ -88,7 +88,7 @@ DWORD GreenTopazTracer::threadProc()
 		}
 
 		VComponent x = PixelSize * (column - 0.5 * (m_horizontalResolution - 1.0));
-		VComponent y = PixelSize * (row - 0.5 * (m_verticalResolution   - 1.0));
+		VComponent y = PixelSize * (row    - 0.5 * (m_verticalResolution   - 1.0));
 
 		// Generate samples inside the pixel and trace rays from these samples.
 
@@ -131,10 +131,7 @@ void GreenTopazTracer::traceScene()
 	// Z coordinate of the view plane.
 	const VComponent ViewZ = 100.0;
 
-	const VComponent PixelSize = m_imagePlane.PixelSize;
-
-	// TODO: use multithreading.
-#if 1
+#if 1    // use multithreading and multisampling
 	m_threads.resize(ThreadCount);
 
 	for (int i = 0; i < ThreadCount; ++i)
@@ -146,70 +143,64 @@ void GreenTopazTracer::traceScene()
 			assert(false); return;
 		}
 	}
-#endif
 
-#if 0     // single-threaded
+	for (int i = 0; i < ThreadCount; ++i)
+	{
+		if ((DWORD)-1 == ResumeThread(m_threads[i]))
+		{
+			std::wcerr << __FUNCTIONW__ << L": ResumeThread() failed: " << GetLastError() << '\n';
+			assert(false); return;
+		}
+	}
+#else
+	// Basic version without multithreading and multisampling.
+	// WARNING: don't remove; is useful as a reference and for bugfixing.
 
-	// Using multisampling.
+	const VComponent PixelSize = m_imagePlane.PixelSize;
 
-	//const int PixelCount = m_horizontalResolution * m_verticalResolution;
-
-	const int SampleCount = 9;    // TODO: hard-coded
-
-	Sampler sampler(SampleCount);
-
-	int index = {};    // index of the image plane element
+	int index = {};
 
 	for (int row = 0; row < m_verticalResolution; ++row)
 	{
 		for (int col = 0; col < m_horizontalResolution; ++col)
 		{
 			VComponent x = PixelSize * (col - 0.5 * (m_horizontalResolution - 1.0));
-			VComponent y = PixelSize * (row - 0.5 * (m_verticalResolution   - 1.0));
+			VComponent y = PixelSize * (row - 0.5 * (m_verticalResolution - 1.0));
 
-			// Generate samples inside the pixel and trace rays from these samples.
+			Vector3 origin = Vector3(x, y, ViewZ);
 
-			std::vector<Pixel> samples = sampler.getSamples_Jittered(x, y);
+			Ray ray(origin, RayDirection);
 
-			std::vector<Color> sampleColors;
-			sampleColors.reserve(SampleCount);
+			Color pixelColor = traceRay(ray, 0);
 
-			for (const auto& itr : samples)
-			{
-				Vector3 origin = Vector3(itr.first, itr.second, ViewZ);
-
-				Ray ray(origin, RayDirection);
-
-				Color color = traceRay(ray, 0);
-
-				sampleColors.push_back(color);
-			}
-
-			// Average the sample colors.
-
-			Color clr;
-
-			for (const auto& itr : sampleColors)
-			{
-				clr += itr;
-			}
-
-			m_imagePlane.setPixelColor(index++, clr / SampleCount);
+			m_imagePlane.setPixelColor(index++, pixelColor);
 		}
 	}
-#else    // TODO: use multithreading.
 
-	for (int i = 0; i < ThreadCount; ++i)
+	// Export the resulting image.
+
+	UINT stride = {};
+	UINT bufferSize = {};
+
+	std::unique_ptr<BYTE[]> spImageData = exportForWicImageProcessor(stride, bufferSize);
+
+	ImageProcessor imgProcessor;
+
+	const std::wstring fileName = L"file2.png";
+
+	if (imgProcessor.saveAsPng(
+			fileName, getHorizontalResolution(), getVerticalResolution(), spImageData, stride, bufferSize))
 	{
-		if ((DWORD)-1 == ResumeThread(m_threads[i]))
-		{
-			// TODO: error
-			assert(false); return;
-		}
+		std::wcout << TIME_STR() << L"Ray traced image saved: \"" << fileName << "\"" << std::endl;
 	}
-#endif
+	else
+	{
+		std::wcerr << TIME_STR() << L"Failed to save the ray traced image\n";
+		assert(false);
+	}
 
 	int tmp = 1;
+#endif
 }
 
 Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const

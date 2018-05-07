@@ -23,6 +23,9 @@ namespace GreenTopazTracerApp
 
 		static INT_PTR CALLBACK aboutDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
+		// Export the ray traced image to a file.
+		void exportImage();
+
 	private:
 		// Application instance.
 		HINSTANCE m_hAppInstance;
@@ -44,5 +47,8 @@ namespace GreenTopazTracerApp
 
 		// Ray tracer.
 		GreenTopazTracer m_tracer;
+
+		// true if the ray tracing have been started.
+		bool m_rayTracingStarted;
 	};
 }

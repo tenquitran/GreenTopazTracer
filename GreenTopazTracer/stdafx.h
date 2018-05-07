@@ -34,8 +34,17 @@
 #include <Objbase.h>
 #include <comdef.h>
 #include <atlbase.h>
+#include <atltime.h>
 
 #include <Wincodec.h>
+
+
+namespace GreenTopazTracerApp
+{
+// Get local time for logging.
+#define TIME_STR()    ATL::CTime::GetCurrentTime().Format(L"%d.%m.%Y %H:%M:%S ").GetString()
+}
+
 
 #include "Exception.h"
 

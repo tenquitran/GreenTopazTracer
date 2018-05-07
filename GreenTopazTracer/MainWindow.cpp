@@ -19,6 +19,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int c
 	  m_clientWidth(clientWidth), m_clientHeight(clientHeight),
 	  m_tracer(clientWidth, clientHeight, 
 	  4, 10)    // TODO: hard-coded
+	  , m_rayTracingStarted(false)
 {
 	// Initialize global strings.
 	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);
@@ -32,7 +33,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int c
 		assert(false); throw EXCEPTION(L"initInstance() failed");
 	}
 
-	if (!SetTimer(m_hMainWindow, IDT_TRACE_RESULT_TIMER, 500, (TIMERPROC)nullptr))
+	if (!SetTimer(m_hMainWindow, IDT_TRACE_RESULT_TIMER, 300, (TIMERPROC)nullptr))    // 500
 	{
 		assert(false); throw EXCEPTION_FMT(L"SetTimer() failed: %u", GetLastError());
 	}
@@ -74,7 +75,7 @@ BOOL MainWindow::initInstance(int nCmdShow)
 	BOOL res = AdjustWindowRect(&wndRect, WindowStyle, TRUE);
 	if (!res)
 	{
-		std::wcerr << L"AdjustWindowRect() failed: " << GetLastError() << std::endl;
+		std::wcerr << TIME_STR() << L"AdjustWindowRect() failed: " << GetLastError() << std::endl;
 		return FALSE;
 	}
 
@@ -84,11 +85,11 @@ BOOL MainWindow::initInstance(int nCmdShow)
 		nullptr, nullptr, m_hAppInstance, this);
 	if (!m_hMainWindow)
 	{
-		std::wcerr << L"CreateWindow() failed: " << GetLastError() << std::endl;
+		std::wcerr << TIME_STR() << L"CreateWindow() failed: " << GetLastError() << std::endl;
 		return FALSE;
 	}
 
-	std::wcout << L"Created main window\n";
+	std::wcout << TIME_STR() << L"Created main window\n";
 
 	ShowWindow(m_hMainWindow, nCmdShow);
 	UpdateWindow(m_hMainWindow);
@@ -96,82 +97,78 @@ BOOL MainWindow::initInstance(int nCmdShow)
 	return TRUE;
 }
 
+void MainWindow::exportImage()
+{
+	UINT stride = {};
+	UINT bufferSize = {};
+
+	std::unique_ptr<BYTE[]> spImageData = m_tracer.exportForWicImageProcessor(stride, bufferSize);
+
+	ImageProcessor imgProcessor;
+
+	const std::wstring fileName = L"file1.png";
+
+	if (imgProcessor.saveAsPng(
+			fileName, m_tracer.getHorizontalResolution(), m_tracer.getVerticalResolution(), spImageData, stride, bufferSize))
+	{
+		std::wcout << TIME_STR() << L"Ray traced image saved: \"" << fileName << "\"" << std::endl;
+	}
+	else
+	{
+		std::wcerr << TIME_STR() << L"Failed to save the ray traced image\n";
+		assert(false);
+	}
+}
+
 int MainWindow::runMessageLoop()
 {
 	HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_GREENTOPAZTRACER));
 
-#if 1
-	BOOL exit = FALSE;
-	DWORD exitCode = {};
+	bool rayTracingComplete = false;
 
 	MSG msg = {};
 
-	// We rely on the fact that if any thread exits, the ray tracing is finished.
-	HANDLE hThread = m_tracer.m_threads[0];
-
-	while (!exit)
+	while (true)
 	{
-		DWORD waitStatus = MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, QS_ALLEVENTS);
-
-		switch (waitStatus)
+		if (    m_rayTracingStarted
+			&& !rayTracingComplete)
 		{
-		case WAIT_OBJECT_0:        // ray tracing complete
+			// Wait for the ray tracing to complete.
+
+			// We rely on the fact that if any thread exits, the ray tracing is finished.
+			HANDLE hThread = m_tracer.m_threads[0];
+
+			DWORD waitStatus = MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, QS_ALLEVENTS);
+
+			switch (waitStatus)
 			{
-				// Export the resulting image.
-				UINT stride = {};
-				UINT bufferSize = {};
+			case WAIT_OBJECT_0:        // ray tracing complete
+				rayTracingComplete = true;
 
-				std::unique_ptr<BYTE[]> spImageData = m_tracer.exportForWicImageProcessor(stride, bufferSize);
+				std::wcout << TIME_STR() << L"Ray tracing complete. Exporting the resulting image..." << std::endl;
 
-				ImageProcessor imgProcessor;
-				const std::wstring filePath = L"file1.png";
-
-				bool res = imgProcessor.saveAsPng(filePath, m_tracer.getHorizontalResolution(), m_tracer.getVerticalResolution(), 
-					spImageData, stride, bufferSize);
-				if (!res)
-				{
-					std::wcerr << L"Failed to save the ray traced image\n";
-					assert(false);
-				}
+				exportImage();
+				break;
+			case WAIT_FAILED:
+				std::wcerr << TIME_STR() << __FUNCTIONW__ << L": unexpected wait status: " << waitStatus << '\n';
+				assert(false); break;
+			default:    // window message arrived
+				break;
 			}
-			break;
-		case WAIT_FAILED:
-			std::wcerr << __FUNCTIONW__ << L"Unexpected wait status: " << waitStatus << '\n';
-			assert(false); return 2;
-		default:    // message arrived
-			while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))    // get next message in the queue
-			{
-				if (WM_QUIT == msg.message)
-				{
-					exit = TRUE;
-					exitCode = msg.wParam;
-					break;
-				}
-
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			break;
 		}
-	}
 
-	return (int)exitCode;
-#else
-	// Without displaying ray tracing results.
-
-	MSG msg;
-
-	while (GetMessage(&msg, nullptr, 0, 0))
-	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		// Window message processing.
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
+			if (WM_QUIT == msg.message)
+			{
+				return (int)msg.wParam;
+			}
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 	}
-
-	return (int)msg.wParam;
-#endif
 }
 
 LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -179,43 +176,22 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-
 	static MainWindow *pMainWnd = nullptr;
-
-	//static COLORREF* pArr;
-	//static const int Width = 70;
-	//static const int Height = 50;
-	//static HBITMAP hBmp;
-	static HDC hSrcDC;    // compatible DC
 
 	switch (message)
 	{
 	case WM_CREATE:
+		pMainWnd = (MainWindow *)((LPCREATESTRUCT)lParam)->lpCreateParams;
+		if (!pMainWnd)
 		{
-			pMainWnd = (MainWindow *)((LPCREATESTRUCT)lParam)->lpCreateParams;
-			if (!pMainWnd)
-			{
-				std::wcerr << L"WM_CREATE: main window pointer is NULL\n";
-				assert(false);
-			}
+			std::wcerr << TIME_STR() << L"WM_CREATE: main window pointer is NULL\n";
+			assert(false);
+		}
+		else
+		{
+			std::wcout << TIME_STR() << L"Starting ray tracing..." << std::endl;
 
-			HDC hDC = GetDC(hWnd);
-			if (!hDC)
-			{
-				std::wcerr << L"WM_CREATE: GetDC() failed\n";
-				assert(false);
-			}
-			else
-			{
-				hSrcDC = CreateCompatibleDC(hDC);
-				if (!hSrcDC)
-				{
-					std::wcerr << L"WM_CREATE: CreateCompatibleDC() failed\n";
-					assert(false);
-				}
-
-				ReleaseDC(hWnd, hDC);
-			}
+			pMainWnd->m_rayTracingStarted = true;
 
 			pMainWnd->m_tracer.traceScene();
 		}
@@ -247,7 +223,7 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 				HDC hdc = GetDC(hWnd);
 
 				const int HorizRes = pMainWnd->m_tracer.getHorizontalResolution();
-				const int VertRes = pMainWnd->m_tracer.getVerticalResolution();
+				const int VertRes  = pMainWnd->m_tracer.getVerticalResolution();
 
 				size_t imageSize = {};
 				std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawDataBGR(imageSize);

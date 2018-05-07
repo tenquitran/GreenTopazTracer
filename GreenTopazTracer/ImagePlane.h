@@ -33,9 +33,9 @@ namespace GreenTopazTracerApp
 		// Returns: the image data buffer.
 		std::unique_ptr<BYTE[]> exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const;
 
-		// Get raw image data (RGB format).
+		// Get raw image data (BGR format).
 		// Parameters: size - number of elements.
-		std::unique_ptr<COLORREF[]> getRawData(size_t& size) const;
+		std::unique_ptr<COLORREF[]> getRawDataBGR(size_t& size) const;
 
 	private:
 		ImagePlane(const ImagePlane&) = delete;

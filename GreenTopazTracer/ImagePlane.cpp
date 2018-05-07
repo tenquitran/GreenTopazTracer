@@ -88,7 +88,7 @@ std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UIN
 	return spBuffer;
 }
 
-std::unique_ptr<COLORREF[]> ImagePlane::getRawData(size_t& size) const
+std::unique_ptr<COLORREF[]> ImagePlane::getRawDataBGR(size_t& size) const
 {
 	size = ElementCount;
 
@@ -98,7 +98,7 @@ std::unique_ptr<COLORREF[]> ImagePlane::getRawData(size_t& size) const
 
 	for (int i = 0; i < ElementCount; ++i)
 	{
-		spBuffer[i] = getPixelColor(i).toRGB();
+		spBuffer[i] = getPixelColor(i).toBGR();
 	}
 
 	LeaveCriticalSection(&m_lock);

@@ -112,7 +112,6 @@ int MainWindow::runMessageLoop()
 	while (!exit)
 	{
 		DWORD waitStatus = MsgWaitForMultipleObjects(1, &hThread, FALSE, INFINITE, QS_ALLEVENTS);
-		//DWORD waitStatus = MsgWaitForMultipleObjects(ThreadCount, &m_tracer.m_evTracingComplete.m_h, FALSE, 10000, QS_ALLEVENTS);
 
 		switch (waitStatus)
 		{
@@ -132,35 +131,10 @@ int MainWindow::runMessageLoop()
 				if (!res)
 				{
 					std::wcerr << L"Failed to save the ray traced image\n";
-					assert(false); return 1;
+					assert(false);
 				}
-
-				// TODO: temp
-#if 0
-				HDC hdc = GetDC(m_hMainWindow);
-
-				const int HorizRes = m_tracer.getHorizontalResolution();
-				const int VertRes  = m_tracer.getVerticalResolution();
-
-				size_t imageSize = {};
-				std::unique_ptr<COLORREF[]> buff = m_tracer.getRawData(imageSize);
-
-				size_t offset = {};
-
-				for (int y = 0; y < VertRes; ++y)
-				{
-					for (int x = 0; x < HorizRes; ++x)
-					{
-						SetPixel(hdc, x, y, buff[offset++]);
-					}
-				}
-
-				ReleaseDC(m_hMainWindow, hdc);
-
-				Sleep(5000);
-#endif
 			}
-			return 0;
+			break;
 		case WAIT_FAILED:
 			std::wcerr << __FUNCTIONW__ << L"Unexpected wait status: " << waitStatus << '\n';
 			assert(false); return 2;
@@ -208,18 +182,43 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 
 	static MainWindow *pMainWnd = nullptr;
 
+	//static COLORREF* pArr;
+	//static const int Width = 70;
+	//static const int Height = 50;
+	//static HBITMAP hBmp;
+	static HDC hSrcDC;    // compatible DC
+
 	switch (message)
 	{
 	case WM_CREATE:
-		// Step 2 (option A). Store the window pointer.
-		pMainWnd = (MainWindow *)((LPCREATESTRUCT)lParam)->lpCreateParams;
-		if (!pMainWnd)
 		{
-			std::wcerr << L"Main window pointer is NULL\n";
-			assert(false);
-		}
+			pMainWnd = (MainWindow *)((LPCREATESTRUCT)lParam)->lpCreateParams;
+			if (!pMainWnd)
+			{
+				std::wcerr << L"WM_CREATE: main window pointer is NULL\n";
+				assert(false);
+			}
 
-		pMainWnd->m_tracer.traceScene();
+			HDC hDC = GetDC(hWnd);
+			if (!hDC)
+			{
+				std::wcerr << L"WM_CREATE: GetDC() failed\n";
+				assert(false);
+			}
+			else
+			{
+				hSrcDC = CreateCompatibleDC(hDC);
+				if (!hSrcDC)
+				{
+					std::wcerr << L"WM_CREATE: CreateCompatibleDC() failed\n";
+					assert(false);
+				}
+
+				ReleaseDC(hWnd, hDC);
+			}
+
+			pMainWnd->m_tracer.traceScene();
+		}
 		break;
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
@@ -243,54 +242,46 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 		{
 		case IDT_TRACE_RESULT_TIMER:
 			{
+				DWORD tick1 = GetTickCount();
+
 				HDC hdc = GetDC(hWnd);
 
 				const int HorizRes = pMainWnd->m_tracer.getHorizontalResolution();
-				const int VertRes  = pMainWnd->m_tracer.getVerticalResolution();
+				const int VertRes = pMainWnd->m_tracer.getVerticalResolution();
 
 				size_t imageSize = {};
-				std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData(imageSize);
+				std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawDataBGR(imageSize);
 
-				size_t offset = {};
+				BITMAPINFO info = {};
+				info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+				info.bmiHeader.biBitCount = 32;    // not 24 because COLORREF is 0x00bbggrr
+				info.bmiHeader.biWidth = HorizRes;
+				info.bmiHeader.biHeight = VertRes;
+				info.bmiHeader.biPlanes = 1;
+				info.bmiHeader.biSizeImage = 0;
+				info.bmiHeader.biCompression = BI_RGB;
 
-				for (int y = 0; y < VertRes; ++y)
-				{
-					for (int x = 0; x < HorizRes; ++x)
-					{
-						SetPixel(hdc, x, y, buff[offset++]);
-					}
-				}
+				int lines = StretchDIBits(hdc,
+					0, 0, HorizRes, VertRes,    // destination rectangle
+					0, 0, HorizRes, VertRes,    // source rectangle
+					buff.get(), &info, DIB_RGB_COLORS, SRCCOPY);
+
+				assert(   GDI_ERROR != lines
+					   && 0         != lines);
 
 				ReleaseDC(hWnd, hdc);
+
+				DWORD tick2 = GetTickCount() - tick1;
+
+				int tmp1 = 1;
 			}
 			return 0;
 		}
 		break;
 	case WM_PAINT:
-		{
-			hdc = BeginPaint(hWnd, &ps);
+		hdc = BeginPaint(hWnd, &ps);
 
-			// TODO: uncomment
-#if 0
-			const int HorizRes = pMainWnd->m_tracer.getHorizontalResolution();
-			const int VertRes  = pMainWnd->m_tracer.getVerticalResolution();
-
-			size_t imageSize = {};
-			std::unique_ptr<COLORREF[]> buff = pMainWnd->m_tracer.getRawData(imageSize);
-
-			size_t offset = {};
-
-			for (int row = 0; row < VertRes; ++row)
-			{
-				for (int col = 0; col < HorizRes; ++col)
-				{
-					SetPixel(hdc, row, col, buff[offset++]);
-				}
-			}
-#endif
-
-			EndPaint(hWnd, &ps);
-		}
+		EndPaint(hWnd, &ps);
 		break;
 	case WM_SIZE:
 		if (pMainWnd)

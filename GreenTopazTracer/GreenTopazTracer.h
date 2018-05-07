@@ -29,11 +29,11 @@ namespace GreenTopazTracerApp
 			return m_imagePlane.exportForWicImageProcessor(stride, bufferSize);
 		}
 
-		// Get raw image data (RGB format).
+		// Get raw image data (BGR format).
 		// Parameters: size - number of elements.
-		std::unique_ptr<COLORREF[]> getRawData(size_t& size) const
+		std::unique_ptr<COLORREF[]> getRawDataBGR(size_t& size) const
 		{
-			return m_imagePlane.getRawData(size);
+			return m_imagePlane.getRawDataBGR(size);
 		}
 
 		int getHorizontalResolution() const

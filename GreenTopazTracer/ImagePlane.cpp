@@ -61,6 +61,23 @@ void ImagePlane::setPixelColor(int index, const Color& clr)
 	LeaveCriticalSection(&m_lock);
 }
 
+void ImagePlane::setPixelColor(int row, int column, const Color& clr)
+{
+	int index = row * HorizontalRes + column;
+
+	if (   index < 0
+		|| index >= ElementCount)
+	{
+		assert(false); return;
+	}
+
+	EnterCriticalSection(&m_lock);
+
+	m_ppPlane[index] = clr;
+
+	LeaveCriticalSection(&m_lock);
+}
+
 std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const
 {
 	stride = (HorizontalRes * 24 + 7) / 8;

@@ -27,6 +27,8 @@ namespace GreenTopazTracerApp
 
 		void setPixelColor(int index, const Color& clr);
 
+		void setPixelColor(int row, int column, const Color& clr);
+
 		// Prepare the image data for usage by the WIC image exporter.
 		// Parameters: stride - stride value for the resulting image;
 		//             bufferSize - size of the returned data buffer, in bytes.

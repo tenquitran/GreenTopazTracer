@@ -21,6 +21,11 @@ GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, int threadCo
 	m_verticalResolution   = m_imagePlane.VerticalRes;
 
 	m_pixelCount = m_horizontalResolution * m_verticalResolution;
+
+	// TODO: temp
+#if 0
+	tmpFunc();
+#endif
 }
 
 GreenTopazTracer::~GreenTopazTracer()
@@ -117,7 +122,8 @@ DWORD GreenTopazTracer::threadProc()
 			clr += itr;
 		}
 
-		m_imagePlane.setPixelColor(previousCounter++, clr / SampleCount);
+		m_imagePlane.setPixelColor(row, column, clr / SampleCount);
+		//m_imagePlane.setPixelColor(previousCounter++, clr / SampleCount);
 		
 	} while (toContinue);
 
@@ -319,3 +325,32 @@ Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const
 
 #endif
 }
+
+#if 0
+void GreenTopazTracer::tmpFunc()
+{
+	LONG row = {}, column = {};
+
+	bool toContinue = true;
+
+	do
+	{
+		LONG previousCounter = InterlockedIncrement(&m_currentPixel);
+		if (previousCounter >= m_pixelCount)
+		{
+			return;
+		}
+
+		toContinue = getRowAndColumn(row, column);
+		if (!toContinue)
+		{
+			break;
+		}
+
+		std::wcerr << row << ", " << column << '\n';
+
+	} while (toContinue);
+
+	std::wcerr << L"----------------------------------------------\n";
+}
+#endif

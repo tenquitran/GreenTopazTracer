@@ -67,6 +67,11 @@ namespace GreenTopazTracerApp
 		// Returns: true if there are more pixels, false once the image plane is completely processed.
 		bool getRowAndColumn(LONG& row, LONG& column);
 
+#if 0
+		// TODO: temp, searching for bugs in the multithreaded code.
+		void tmpFunc();
+#endif
+
 	public:
 		std::vector<CHandle> m_threads;
 

@@ -10,9 +10,14 @@ using namespace GreenTopazTracerApp;
 Scene::Scene()
 	: m_backgroundColor(0.0, 0.64, 0.91)    // light blue
 {
-	// Add a sphere with the center at the origin
-
+#if 0
+	// Add a sphere with the center at the origin.
 	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(), 85.0);
+#else
+	// A sphere with the center at the top left corner.
+	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 85.0);    // may reveal artifacts (black dots)
+	//std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(90.0, 90.0, 0), 85.0);    // may reveal artifacts (black dots)
+#endif
 	sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
 
 	m_objects.emplace_back(std::move(sphere1));

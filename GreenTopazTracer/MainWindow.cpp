@@ -237,9 +237,10 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 				info.bmiHeader.biSizeImage = 0;
 				info.bmiHeader.biCompression = BI_RGB;
 
+				// The image should be flipped vertically.
 				int lines = StretchDIBits(hdc,
-					0, 0, HorizRes, VertRes,    // destination rectangle
-					0, 0, HorizRes, VertRes,    // source rectangle
+					0, VertRes, HorizRes, -VertRes,    // destination rectangle
+					0, 0, HorizRes, VertRes,           // source rectangle
 					buff.get(), &info, DIB_RGB_COLORS, SRCCOPY);
 
 				assert(   GDI_ERROR != lines

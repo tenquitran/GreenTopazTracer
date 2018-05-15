@@ -10,8 +10,10 @@ using namespace GreenTopazTracerApp;
 
 ImagePlane::ImagePlane(int horizontalRes, int verticalRes)
 	: HorizontalRes(horizontalRes), VerticalRes(verticalRes), PixelSize(1.0), 
-	  ElementCount(horizontalRes * verticalRes), m_ppPlane(nullptr)
+	ElementCount(horizontalRes * verticalRes), m_ppPlane(nullptr)
 {
+	InterlockedExchange(&m_processedElements, 0L);
+
 	InitializeCriticalSection(&m_lock);
 
 	if (   HorizontalRes <= 0
@@ -59,10 +61,19 @@ void ImagePlane::setPixelColor(int index, const Color& clr)
 	m_ppPlane[index] = clr;
 
 	LeaveCriticalSection(&m_lock);
+
+	InterlockedIncrement(&m_processedElements);
 }
 
 void ImagePlane::setPixelColor(int row, int column, const Color& clr)
 {
+	// TODO: temp
+#if 0//_DEBUG
+	CAtlString msg;
+	msg.Format(L"row: %d, column: %d\n", row, column);
+	OutputDebugStringW(msg);
+#endif
+
 	int index = row * HorizontalRes + column;
 
 	if (   index < 0
@@ -76,10 +87,15 @@ void ImagePlane::setPixelColor(int row, int column, const Color& clr)
 	m_ppPlane[index] = clr;
 
 	LeaveCriticalSection(&m_lock);
+
+	InterlockedIncrement(&m_processedElements);
 }
 
 std::unique_ptr<BYTE[]> ImagePlane::exportForWicImageProcessor(UINT& stride, UINT& bufferSize) const
 {
+	std::wcout << TIME_STR() << "ImagePlane: " << m_processedElements 
+		<< " of " << (HorizontalRes * VerticalRes) << " elements processed" << std::endl;
+
 	stride = (HorizontalRes * 24 + 7) / 8;
 
 	bufferSize = VerticalRes * stride;

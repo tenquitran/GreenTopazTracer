@@ -135,6 +135,9 @@ int MainWindow::runMessageLoop()
 		{
 			// Wait for the ray tracing to complete.
 
+			// NOTE: Wrong! While some threads exit, others may still have work to do.
+			// Use some wait function in the tracer class?
+
 			// We rely on the fact that if any thread exits, the ray tracing is finished.
 			HANDLE hThread = m_tracer.m_threads[0];
 

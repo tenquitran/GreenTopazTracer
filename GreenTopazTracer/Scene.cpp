@@ -15,12 +15,17 @@ Scene::Scene()
 	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(), 85.0);
 #else
 	// A sphere with the center at the top left corner.
-	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 85.0);    // may reveal artifacts (black dots)
+	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0);    // may reveal artifacts (black dots)
 	//std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(90.0, 90.0, 0), 85.0);    // may reveal artifacts (black dots)
-#endif
 	sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
 
+	// A sphere with the center at the origin.
+	std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0);
+	sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
+#endif
+	
 	m_objects.emplace_back(std::move(sphere1));
+	m_objects.emplace_back(std::move(sphere2));
 	//m_objects.emplace_back(std::make_unique<Sphere>(Vector3(), 85.0));
 }
 

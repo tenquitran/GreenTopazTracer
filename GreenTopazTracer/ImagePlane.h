@@ -64,5 +64,8 @@ namespace GreenTopazTracerApp
 		// Note that writers by themselves don't need it - they work with pixel indices.
 		// It's reading that needs a lock.
 		mutable CRITICAL_SECTION m_lock;
+
+		// Number of the actually processed plane elements. Used for troubleshooting.
+		volatile LONG m_processedElements;
 	};
 }

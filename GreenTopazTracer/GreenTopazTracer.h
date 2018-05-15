@@ -64,7 +64,8 @@ namespace GreenTopazTracerApp
 		DWORD threadProc();
 
 		// Get row and column of the next pixel.
-		// Returns: true if there are more pixels, false once the image plane is completely processed.
+		// Parameters: row, column - valid only if the function returns true.
+		// Returns: true if not all image plane pixels were processed yet, false otherwise.
 		bool getRowAndColumn(LONG& row, LONG& column);
 
 #if 0
@@ -91,11 +92,14 @@ namespace GreenTopazTracerApp
 
 		long m_pixelCount;
 
+		// TODO: remove but check out that ImagePlane is properly processed in the end.
+#if 1
 		// Counter for the currently processed pixel. 
-		__declspec(align(4)) volatile LONG m_currentPixel;
+		__declspec(align(8)) volatile LONG m_currentPixel;
+#endif
 
 		// Current values of pixel row and column.
-		__declspec(align(4)) volatile LONG m_row;
-		__declspec(align(4)) volatile LONG m_column;
+		__declspec(align(8)) volatile LONG m_row;
+		__declspec(align(8)) volatile LONG m_column;
 	};
 }

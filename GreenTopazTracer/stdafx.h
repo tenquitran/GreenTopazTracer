@@ -65,3 +65,5 @@ namespace GreenTopazTracerApp
 #include "ImageProcessor.h"
 
 #include "Sampler.h"
+
+#include "PixelCounter.h"

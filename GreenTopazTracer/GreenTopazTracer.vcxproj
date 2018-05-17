@@ -150,6 +150,7 @@
     <ClInclude Include="ImagePlane.h" />
     <ClInclude Include="ImageProcessor.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="PixelCounter.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Resource.h" />

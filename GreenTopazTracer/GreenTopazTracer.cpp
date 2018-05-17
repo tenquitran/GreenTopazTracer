@@ -10,67 +10,14 @@ using namespace GreenTopazTracerApp;
 
 GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps)
 	: m_imagePlane(imageWidth, imageHeight), 
+	  HorizontalResolution(imageWidth), VerticalResolution(imageHeight), PixelCount(imageWidth * imageHeight),
 	  ThreadCount(threadCount), MaxTracingSteps(maxTracingSteps),
-	  m_horizontalResolution{}, m_verticalResolution{}, m_pixelCount{}
+	  m_pixelCounter(imageWidth, imageHeight)
 {
-	InterlockedExchange(&m_currentPixel, 0L);
-
-	// Note: the column value will be incremented right away, so it should be (-1).
-	InterlockedExchange(&m_row, 0L);
-	InterlockedExchange(&m_column, -1L);
-
-	m_horizontalResolution = m_imagePlane.HorizontalRes;
-	m_verticalResolution   = m_imagePlane.VerticalRes;
-
-	m_pixelCount = m_horizontalResolution * m_verticalResolution;
-
-	// TODO: temp
-#if 0
-	tmpFunc();
-#endif
 }
 
 GreenTopazTracer::~GreenTopazTracer()
 {
-}
-
-bool GreenTopazTracer::getRowAndColumn(LONG& row, LONG& column)
-{
-#if 1
-	// Worse.
-
-	column = InterlockedIncrement(&m_column);
-
-	if (column >= m_horizontalResolution)
-	{
-		InterlockedExchange(&m_column, 0L);
-
-		row = InterlockedIncrement(&m_row);
-		if (row >= m_verticalResolution)
-		{
-			return false;
-		}
-	}
-
-	return true;
-#else
-	// Bad.
-
-	row    = InterlockedExchange(&m_row, m_row);
-	column = InterlockedExchange(&m_column, m_column);
-
-	if (InterlockedIncrement(&m_column) >= m_horizontalResolution)
-	{
-		InterlockedExchange(&m_column, 0L);
-		
-		if (InterlockedIncrement(&m_row) >= m_verticalResolution)
-		{
-			return false;
-		}
-	}
-
-	return true;
-#endif
 }
 
 DWORD WINAPI GreenTopazTracer::threadProc(LPVOID pArg)
@@ -97,69 +44,19 @@ DWORD GreenTopazTracer::threadProc()
 
 	Sampler sampler(SampleCount);
 
-	LONG row = {}, column = {};
-
-	// TODO: remove
-	bool toContinue = true;
+	int row = {}, column = {};
 
 	do
 	{
-#if 1
-		LONG previousCounter = InterlockedIncrement(&m_currentPixel);
-		if (previousCounter >= m_pixelCount)
+		// Get row and column indices.
+		if (!m_pixelCounter.getNext(row, column))
 		{
 			return 0;
 		}
-#endif
 
-#if 1
-		// Get row and column indices.
+		VComponent x = PixelSize * (column - 0.5 * (HorizontalResolution - 1.0));
+		VComponent y = PixelSize * (row    - 0.5 * (VerticalResolution   - 1.0));
 
-		column = InterlockedIncrement(&m_column);
-
-		if (column >= m_horizontalResolution)
-		{
-			InterlockedExchange(&m_column, 0L);
-			column = 0;
-
-			row = InterlockedIncrement(&m_row);
-			if (row >= m_verticalResolution)
-			{
-				return 0;    // finished tracing
-			}
-		}
-
-		row = InterlockedExchange(&m_row, m_row);
-
-		// TODO: temp
-#if _DEBUG
-		if (   0 == row
-			&& 1 == column)
-		{
-			static int counter = 0;
-			if (counter > 0)
-			{
-				int tmp = 1;
-			}
-			++counter;
-		}
-#endif
-
-#else
-		toContinue = getRowAndColumn(row, column);
-		if (!toContinue)
-		{
-			break;
-		}
-#endif
-
-		VComponent x = PixelSize * (column - 0.5 * (m_horizontalResolution - 1.0));
-		VComponent y = PixelSize * (row    - 0.5 * (m_verticalResolution   - 1.0));
-
-#if 0
-		// TODO: temp
-		m_imagePlane.setPixelColor(row, column, Color(1.0, 0.0, 0.0));
-#else
 		// Generate samples inside the pixel and trace rays from these samples.
 
 		std::vector<Pixel> samples = sampler.getSamples_Jittered(x, y);
@@ -188,10 +85,8 @@ DWORD GreenTopazTracer::threadProc()
 		}
 
 		m_imagePlane.setPixelColor(row, column, clr / SampleCount);
-		//m_imagePlane.setPixelColor(previousCounter++, clr / SampleCount);
-#endif
-		
-	} while (toContinue);
+
+	} while (true);
 
 	return 0;
 }
@@ -391,32 +286,3 @@ Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const
 
 #endif
 }
-
-#if 0
-void GreenTopazTracer::tmpFunc()
-{
-	LONG row = {}, column = {};
-
-	bool toContinue = true;
-
-	do
-	{
-		LONG previousCounter = InterlockedIncrement(&m_currentPixel);
-		if (previousCounter >= m_pixelCount)
-		{
-			return;
-		}
-
-		toContinue = getRowAndColumn(row, column);
-		if (!toContinue)
-		{
-			break;
-		}
-
-		std::wcerr << row << ", " << column << '\n';
-
-	} while (toContinue);
-
-	std::wcerr << L"----------------------------------------------\n";
-}
-#endif

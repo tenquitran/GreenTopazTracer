@@ -10,7 +10,7 @@ using namespace GreenTopazTracerApp;
 
 ImagePlane::ImagePlane(int horizontalRes, int verticalRes)
 	: HorizontalRes(horizontalRes), VerticalRes(verticalRes), PixelSize(1.0), 
-	ElementCount(horizontalRes * verticalRes), m_ppPlane(nullptr)
+	  ElementCount(horizontalRes * verticalRes), m_ppPlane(nullptr)
 {
 	InterlockedExchange(&m_processedElements, 0L);
 

@@ -5,6 +5,7 @@
 
 namespace GreenTopazTracerApp
 {
+	// The ray tracer.
 	class GreenTopazTracer
 	{
 	public:
@@ -63,23 +64,15 @@ namespace GreenTopazTracerApp
 		static DWORD WINAPI threadProc(LPVOID pArg);
 		DWORD threadProc();
 
-		// Get row and column of the next pixel.
-		// Parameters: row, column - valid only if the function returns true.
-		// Returns: true if not all image plane pixels were processed yet, false otherwise.
-		bool getRowAndColumn(LONG& row, LONG& column);
-
-#if 0
-		// TODO: temp, searching for bugs in the multithreaded code.
-		void tmpFunc();
-#endif
-
 	public:
 		std::vector<CHandle> m_threads;
 
 	private:
-		ImagePlane m_imagePlane;
+		const int HorizontalResolution;
+		const int VerticalResolution;
 
-		Scene m_scene;
+		// Number of pixels in the image.
+		const long PixelCount;
 
 		// Number of threads to perform ray tracing.
 		const int ThreadCount;
@@ -87,19 +80,11 @@ namespace GreenTopazTracerApp
 		// Maximum number of steps for ray tracing.
 		const int MaxTracingSteps;
 
-		int m_horizontalResolution;
-		int m_verticalResolution;
+		ImagePlane m_imagePlane;
 
-		long m_pixelCount;
+		Scene m_scene;
 
-		// TODO: remove but check out that ImagePlane is properly processed in the end.
-#if 1
-		// Counter for the currently processed pixel. 
-		__declspec(align(8)) volatile LONG m_currentPixel;
-#endif
-
-		// Current values of pixel row and column.
-		__declspec(align(8)) volatile LONG m_row;
-		__declspec(align(8)) volatile LONG m_column;
+		// Used to get the next pixel to process.
+		PixelCounter m_pixelCounter;
 	};
 }

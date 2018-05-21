@@ -34,6 +34,9 @@
     <Filter Include="ImageExport">
       <UniqueIdentifier>{29f0f4fb-634b-4e1c-8824-15292d2d2d9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{9223327c-577d-4cc1-b82b-bf1c21955aa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -93,6 +96,12 @@
     <ClInclude Include="PixelCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialPhong.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -138,6 +147,12 @@
       <Filter>ImageExport</Filter>
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialPhong.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

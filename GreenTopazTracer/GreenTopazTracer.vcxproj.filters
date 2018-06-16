@@ -100,7 +100,10 @@
       <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files</Filter>
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialEmissive.h">
+      <Filter>Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +156,10 @@
       <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialEmissive.cpp">
+      <Filter>Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

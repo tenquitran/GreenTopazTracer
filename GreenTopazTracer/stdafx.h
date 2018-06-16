@@ -58,6 +58,7 @@ namespace GreenTopazTracerApp
 
 #include "Material.h"
 #include "MaterialPhong.h"
+#include "MaterialEmissive.h"
 
 #include "GeometricObject.h"
 #include "Plane.h"

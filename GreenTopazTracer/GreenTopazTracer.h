@@ -56,13 +56,13 @@ namespace GreenTopazTracerApp
 		GreenTopazTracer(const GreenTopazTracer&) = delete;
 		GreenTopazTracer& operator=(const GreenTopazTracer&) = delete;
 
+		static DWORD WINAPI threadProc(LPVOID pArg);
+		DWORD threadProc();
+
 		// Trace the specified ray.
 		// Parameters: ray - ray to trace;
 		//             steps - number of tracing steps already performed.
 		Color traceRay(const Ray& ray, int steps) const;
-
-		static DWORD WINAPI threadProc(LPVOID pArg);
-		DWORD threadProc();
 
 	public:
 		std::vector<CHandle> m_threads;

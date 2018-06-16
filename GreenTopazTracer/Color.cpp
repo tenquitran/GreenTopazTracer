@@ -32,7 +32,7 @@ COLORREF Color::toRGB() const
 	return RGB(m_red * 255, m_green * 255, m_blue * 255);
 }
 
-Color Color::operator+(const Color& other)
+Color Color::operator+(const Color& other) const
 {
 	return Color(m_red + other.m_red, m_green + other.m_green, m_blue + other.m_blue);
 }
@@ -46,7 +46,12 @@ Color& Color::operator+=(const Color& other)
 	return (*this);
 }
 
-Color Color::operator/(int divisor)
+Color Color::operator/(int divisor) const
 {
 	return Color(m_red / divisor, m_green / divisor, m_blue / divisor);
+}
+
+Color Color::operator*(double val) const
+{
+	return Color(m_red * val, m_green * val, m_blue * val);
 }

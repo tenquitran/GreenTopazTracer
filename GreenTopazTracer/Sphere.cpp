@@ -6,15 +6,23 @@ using namespace GreenTopazTracerApp;
 
 //////////////////////////////////////////////////////////////////////////
 
-// Epsilon for intersection calculations, etc.
-const VComponent Sphere::Epsilon = 0.001;
 
-//////////////////////////////////////////////////////////////////////////
-
-
-Sphere::Sphere(const Vector3& center, VComponent radius)
-	: GeometricObject(center), m_radius(radius)
+Sphere::Sphere(const Vector3& center, VComponent radius, const MaterialPhong& material)
+	: GeometricObject(center), 
+	  //HasMaterial(material),
+	  m_radius(radius)
+	  //, m_material(material)
 {
+	m_spMaterial = std::make_unique<MaterialPhong>(material);
+}
+
+Sphere::Sphere(const Vector3& center, VComponent radius, const MaterialEmissive& material)
+	: GeometricObject(center),
+	//HasMaterial(material),
+	m_radius(radius)
+	//, m_material(material)
+{
+	m_spMaterial = std::make_unique<MaterialEmissive>(material);
 }
 
 Sphere::~Sphere()
@@ -64,4 +72,9 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	}
 
 	return false;
+}
+
+const Material& Sphere::getMaterial() const
+{
+	return *m_spMaterial;
 }

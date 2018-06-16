@@ -7,7 +7,11 @@ namespace GreenTopazTracerApp
 		: public GeometricObject
 	{
 	public:
-		Sphere(const Vector3& center, VComponent radius);
+		// Solid sphere.
+		Sphere(const Vector3& center, VComponent radius, const MaterialPhong& material);
+
+		// Light source.
+		Sphere(const Vector3& center, VComponent radius, const MaterialEmissive& material);
 
 		virtual ~Sphere();
 
@@ -17,10 +21,11 @@ namespace GreenTopazTracerApp
 		//             hitInfo - information about the intersection point.
 		virtual bool hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo) override;
 
+		virtual const Material& getMaterial() const override;
+
 	private:
 		VComponent m_radius;
 
-		// Epsilon for intersection calculations, etc.
-		static const VComponent Epsilon;
+		std::unique_ptr<Material> m_spMaterial;
 	};
 }

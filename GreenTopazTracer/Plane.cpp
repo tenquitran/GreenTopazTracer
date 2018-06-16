@@ -6,14 +6,11 @@ using namespace GreenTopazTracerApp;
 
 //////////////////////////////////////////////////////////////////////////
 
-// Epsilon for intersection calculations, etc.
-const VComponent Plane::Epsilon = 0.001;
 
-//////////////////////////////////////////////////////////////////////////
-
-
-Plane::Plane(const Vector3& center, const Vector3& normal)
-	: GeometricObject(center), m_normal(normal)
+Plane::Plane(const Vector3& center, const Vector3& normal, const MaterialPhong& material)
+	: GeometricObject(center), 
+	  //HasMaterial(material),
+	  m_normal(normal), m_material(material)
 {
 }
 
@@ -36,3 +33,10 @@ bool Plane::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 
 	return false;
 }
+
+#if 1
+const Material& Plane::getMaterial() const
+{
+	return m_material;
+}
+#endif

@@ -21,11 +21,13 @@ namespace GreenTopazTracerApp
 		// Convert color values to the RGB format used in Windows.
 		COLORREF toRGB() const;
 
-		Color operator+(const Color& other);
+		Color operator+(const Color& other) const;
 
 		Color& operator+=(const Color& other);
 
-		Color operator/(int divisor);
+		Color operator/(int divisor) const;
+
+		Color operator*(double val) const;
 
 	public:
 		ClrComponentType m_red;

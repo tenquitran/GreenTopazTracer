@@ -7,26 +7,38 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-Scene::Scene()
-	: m_backgroundColor(0.0, 0.64, 0.91)    // light blue
+Scene::Scene(const Color& backgroundColor)
+	: m_backgroundColor(backgroundColor)
 {
 #if 0
 	// Add a sphere with the center at the origin.
 	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(), 85.0);
 #else
+	Color red(0.94, 0.28, 0.31);    // red (not too bright)
+
 	// A sphere with the center at the top left corner.
-	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0);    // may reveal artifacts (black dots)
-	//std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(90.0, 90.0, 0), 85.0);    // may reveal artifacts (black dots)
-	sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
+	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0, MaterialPhong(red, red, red, 0.0));
+	//sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
+
+	Color darkBlue(0.0, 0.0, 0.63);
 
 	// A sphere with the center at the origin.
-	std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0);
-	sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
+	std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(darkBlue, darkBlue, darkBlue, 0.0));
+	//sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
 #endif
 	
 	m_objects.emplace_back(std::move(sphere1));
 	m_objects.emplace_back(std::move(sphere2));
 	//m_objects.emplace_back(std::make_unique<Sphere>(Vector3(), 85.0));
+
+#if 1
+	// Add lights.
+
+	std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
+	//std::unique_ptr<LightSource> light1 = std::make_unique<LightSource>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
+
+	m_lights.emplace_back(std::move(light1));
+#endif
 }
 
 Scene::~Scene()
@@ -88,4 +100,30 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 	}
 
 	return nearestHit;
+}
+
+Color Scene::computeIllumination(const HitInfo& hit) const
+{
+#if 1
+	// TODO: temp, simplified.
+	return (hit.m_pHit->getMaterial().calculateColor(hit));
+#else
+
+	Color result;
+
+#if 0
+	Color col(0, 0, 0);
+	for each light L
+	{
+		// create shadow ray; is ”is” in shadow
+		// use intersectScene for this...
+		if (not inShadow(L, is))
+		{
+			col += DiffuseAndSpecular(L, is);
+		}
+	}
+	return col;
+#endif
+
+#endif
 }

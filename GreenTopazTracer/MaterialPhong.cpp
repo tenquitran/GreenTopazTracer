@@ -26,6 +26,6 @@ MaterialPhong::~MaterialPhong()
 
 Color MaterialPhong::calculateColor(const HitInfo& hitInfo) const
 {
-	// TODO: implement
-	return Color();
+	// TODO: stub
+	return m_diffuseColor;
 }

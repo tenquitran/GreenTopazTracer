@@ -6,6 +6,11 @@ using namespace GreenTopazTracerApp;
 
 //////////////////////////////////////////////////////////////////////////
 
+// Epsilon for intersection calculations, etc.
+const VComponent GeometricObject::Epsilon = 0.001;
+
+//////////////////////////////////////////////////////////////////////////
+
 
 GeometricObject::GeometricObject(const Vector3& center)
 	: m_center(center)

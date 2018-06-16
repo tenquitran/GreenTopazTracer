@@ -7,7 +7,7 @@ namespace GreenTopazTracerApp
 	class Scene
 	{
 	public:
-		Scene();
+		explicit Scene(const Color& backgroundColor);
 
 		virtual ~Scene();
 
@@ -21,6 +21,8 @@ namespace GreenTopazTracerApp
 		// Return: intersection data. Call isValid() to check if there was an actual intersection.
 		HitInfo findNearestHit(const Ray& ray) const;
 
+		Color computeIllumination(const HitInfo& hit) const;
+
 	private:
 		Scene(const Scene&) = delete;
 		Scene& operator=(const Scene&) = delete;
@@ -28,6 +30,9 @@ namespace GreenTopazTracerApp
 	private:
 		// Objects in the scene.
 		std::vector<GeometricObjectUPtr> m_objects;
+
+		// Light sources.
+		std::vector<GeometricObjectUPtr> m_lights;
 
 		Color m_backgroundColor;
 	};

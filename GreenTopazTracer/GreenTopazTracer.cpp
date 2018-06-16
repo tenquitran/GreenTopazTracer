@@ -9,9 +9,10 @@ using namespace GreenTopazTracerApp;
 
 
 GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps)
-	: m_imagePlane(imageWidth, imageHeight), 
-	  HorizontalResolution(imageWidth), VerticalResolution(imageHeight), PixelCount(imageWidth * imageHeight),
+	: HorizontalResolution(imageWidth), VerticalResolution(imageHeight), PixelCount(imageWidth * imageHeight),
 	  ThreadCount(threadCount), MaxTracingSteps(maxTracingSteps),
+	  m_imagePlane(imageWidth, imageHeight), 
+	  m_scene(Color(0.0, 0.64, 0.91)),    // light blue background
 	  m_pixelCounter(imageWidth, imageHeight)
 {
 }
@@ -174,115 +175,20 @@ Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const
 {
 	if (steps > MaxTracingSteps)
 	{
-		return Color() /*m_backgroundColor*/;
-	}
-#if 0
-	else if (ray.isIntensityTooLow())
-	{
 		return Color();
 	}
-#endif
 
 	HitInfo hit = m_scene.findNearestHit(ray);
 
 	if (!hit.isValid())
 	{
-		return (/*ray.m_intensity * */ m_scene.getBackgroundColor());    // no intersection
+		return m_scene.getBackgroundColor();    // no intersection
 	}
 
+#if 0
 	// TODO: temp, simplified.
 	return (hit.m_pHit->getColor());
-	
-	// Code from the older version of the ray tracer.
-#if 0
-	//glm::dvec3 intersection;    // distance
-	//Intersectable * const pIntersectedObj = m_scene.findIntersection(ray, intersection);
-
-	// Intersection with a scene object.
-	// Instead of checking each particular type (sphere, triangle, etc.), we're using HasMaterial mix-in.
-	HasMaterial *pHasMaterial = dynamic_cast<HasMaterial *>(pIntersectedObj);
-	if (!pHasMaterial)
-	{
-		// Light sources have no material.
-		LightSource *pIsLight = dynamic_cast<LightSource *>(pIntersectedObj);
-		if (!pIsLight)
-		{
-			assert(false); return m_scene.getBackgroundColor();    // serious error
-		}
-		else
-		{
-			// TODO: calculate the color of light. Probably needs an improvement.
-			return (pIsLight->m_color * pIsLight->m_brightness)/*.clamp()*/;
-		}
-	}
-
-	Material material = pHasMaterial->getMaterial();
-
-	// Note that these calculations cannot be performed by scene objects - they don't know about other objects or light sources.
-
-	// Normal at the intersection point.
-	glm::dvec3 normal = pIntersectedObj->getNormal(intersection);
-
-	Color phong = m_scene.calculatePhongColor(material, intersection, ray.m_direction, normal) * ray.m_intensity;
-
-	Color reflected;
-	Color refracted;
-
-	if (   material.isReflective()
-		|| material.isTransparent())
-	{
-		double srcRefraction = m_scene.getRefractionIndex();
-		double destRefraction = material.m_refractionIndex;
-
-		// Check if the ray and normal are pointing more or less in the same direction - i.e. we are inside an object.
-		if (glm::dot(ray.m_direction, normal) > 0)
-		{
-			normal = -normal;
-			srcRefraction = material.m_refractionIndex;
-			destRefraction = m_scene.getRefractionIndex();
-
-			// TODO: temp
-			if (EIntersectableType::Sphere == pIntersectedObj->getIntersectableType())
-			{
-				int tmp = 1;
-			}
-			if (material.isTransparent())
-			{
-				int tmp = 1;
-			}
-		}
-
-		glm::dvec3 reflectedDir = calculateReflectedDirection(ray.m_direction, normal);
-
-		if (material.isReflective())
-		{
-			Color reflectedColor = traceRay(Ray(intersection + reflectedDir * glm::epsilon<double>(), reflectedDir, ray.m_intensity), steps + 1);
-
-			reflected = (reflectedColor * material.m_reflectivity * material.m_diffuseColor * ray.m_intensity).clamp();
-		}
-
-		if (material.isTransparent())
-		{
-			glm::dvec3 refractedDir = calculateRefractedDirection(ray.m_direction, normal, srcRefraction, destRefraction);
-
-			// TODO: decrease ray intensity
-
-			refracted = traceRay(Ray(intersection, refractedDir, ray.m_intensity), steps + 1);
-		}
-	}
-
-	//Cres = (1 - T) * (C + R * Cr) + T * Ct
-
-#if 1    // with refraction
-	return (material.m_opacity * (phong + reflected) + refracted * (1.0 - material.m_opacity)).clamp();
-	//return (material.m_opacity * (phong + material.m_reflectivity * reflected) + transparent).clamp();
 #else
-	// without refraction
-	return (phong + reflected).clamp();
-#endif
-
-	//return (lambertianColor(material, intersection, normal) /*+ reflected*/ /* + refracted*/);    // TODO: uncomment
-	//return phong.clamp();
-
+	return m_scene.computeIllumination(hit);
 #endif
 }

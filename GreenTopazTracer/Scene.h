@@ -28,11 +28,13 @@ namespace GreenTopazTracerApp
 		Scene& operator=(const Scene&) = delete;
 
 	private:
-		// Objects in the scene.
+		// Objects in the scene, including light sources.
 		std::vector<GeometricObjectUPtr> m_objects;
 
+#if 0
 		// Light sources.
 		std::vector<GeometricObjectUPtr> m_lights;
+#endif
 
 		Color m_backgroundColor;
 	};

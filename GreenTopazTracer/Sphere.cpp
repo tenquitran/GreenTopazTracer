@@ -8,19 +8,15 @@ using namespace GreenTopazTracerApp;
 
 
 Sphere::Sphere(const Vector3& center, VComponent radius, const MaterialPhong& material)
-	: GeometricObject(center), 
-	  //HasMaterial(material),
+	: GeometricObject(center, false), 
 	  m_radius(radius)
-	  //, m_material(material)
 {
 	m_spMaterial = std::make_unique<MaterialPhong>(material);
 }
 
 Sphere::Sphere(const Vector3& center, VComponent radius, const MaterialEmissive& material)
-	: GeometricObject(center),
-	//HasMaterial(material),
-	m_radius(radius)
-	//, m_material(material)
+	: GeometricObject(center, true),
+	  m_radius(radius)
 {
 	m_spMaterial = std::make_unique<MaterialEmissive>(material);
 }

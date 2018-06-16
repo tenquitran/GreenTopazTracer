@@ -32,12 +32,13 @@ Scene::Scene(const Color& backgroundColor)
 	//m_objects.emplace_back(std::make_unique<Sphere>(Vector3(), 85.0));
 
 #if 1
-	// Add lights.
+	// Add light sources.
 
 	std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
 	//std::unique_ptr<LightSource> light1 = std::make_unique<LightSource>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
 
-	m_lights.emplace_back(std::move(light1));
+	m_objects.emplace_back(std::move(light1));
+	//m_lights.emplace_back(std::move(light1));
 #endif
 }
 

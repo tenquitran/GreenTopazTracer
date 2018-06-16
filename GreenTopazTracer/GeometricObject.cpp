@@ -12,8 +12,8 @@ const VComponent GeometricObject::Epsilon = 0.001;
 //////////////////////////////////////////////////////////////////////////
 
 
-GeometricObject::GeometricObject(const Vector3& center)
-	: m_center(center)
+GeometricObject::GeometricObject(const Vector3& center, bool isLight)
+	: m_center(center), m_isLight(isLight)
 {
 }
 

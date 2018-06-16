@@ -5,10 +5,13 @@ namespace GreenTopazTracerApp
 {
 	class Plane
 		: public GeometricObject
-		//,public HasMaterial
 	{
 	public:
+		// Solid object.
 		Plane(const Vector3& center, const Vector3& normal, const MaterialPhong& material);
+
+		// Light source.
+		Plane(const Vector3& center, const Vector3& normal, const MaterialEmissive& material);
 
 		virtual ~Plane();
 
@@ -18,14 +21,12 @@ namespace GreenTopazTracerApp
 		//             hitInfo - information about the intersection point.
 		virtual bool hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo) override;
 
-#if 1
 		virtual const Material& getMaterial() const override;
-#endif
 
 	private:
 		// Normal to the plane.
 		Vector3 m_normal;
 
-		MaterialPhong m_material;
+		std::unique_ptr<Material> m_spMaterial;
 	};
 }

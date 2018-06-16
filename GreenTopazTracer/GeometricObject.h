@@ -6,7 +6,7 @@ namespace GreenTopazTracerApp
 	class GeometricObject
 	{
 	public:
-		explicit GeometricObject(const Vector3& center);
+		GeometricObject(const Vector3& center, bool isLight);
 
 		virtual ~GeometricObject();
 
@@ -18,6 +18,12 @@ namespace GreenTopazTracerApp
 
 		virtual const Material& getMaterial() const = 0;
 
+		// Returns true if the object is the light source.
+		bool isLight() const
+		{
+			return m_isLight;
+		}
+
 	protected:
 		// For most geometric objects, a center.
 		// For a plane, any point that belong to a plane.
@@ -25,6 +31,9 @@ namespace GreenTopazTracerApp
 
 		// Epsilon for intersection calculations, etc.
 		static const VComponent Epsilon;
+
+		// true if the object is the light source.
+		bool m_isLight;
 	};
 
 	typedef std::unique_ptr<GeometricObject> GeometricObjectUPtr;

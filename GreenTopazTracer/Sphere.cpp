@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 
 
 Sphere::Sphere(const Vector3& center, VComponent radius, const MaterialPhong& material)
-	: GeometricObject(center, false), 
+	: GeometricObject(center), 
 	  m_radius(radius)
 {
 	m_spMaterial = std::make_unique<MaterialPhong>(material);
@@ -25,7 +25,7 @@ Sphere::~Sphere()
 {
 }
 
-bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
+bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo) const
 {
 	VComponent t;
 	Vector3 temp = ray.m_origin - m_center;
@@ -46,7 +46,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	// Smaller root of the quadratic equation.
 	t = (-b - e) / denominator;
 
-	if (t > Epsilon)
+	if (t > FloatingEpsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;
@@ -58,7 +58,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	// Larger root of the quadratic equation.
 	t = (-b + e) / denominator;
 
-	if (t > Epsilon)
+	if (t > FloatingEpsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = (temp + t * ray.m_direction) / m_radius;
@@ -70,7 +70,7 @@ bool Sphere::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	return false;
 }
 
-const Material& Sphere::getMaterial() const
+Material* Sphere::getMaterial() const
 {
-	return *m_spMaterial;
+	return m_spMaterial.get();
 }

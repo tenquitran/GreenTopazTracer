@@ -105,6 +105,9 @@
     <ClInclude Include="MaterialEmissive.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialType.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

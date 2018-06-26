@@ -20,6 +20,11 @@ namespace GreenTopazTracerApp
 		// Calculate color at the intersection point.
 		virtual Color calculateColor(const HitInfo& hitInfo) const override;
 
+		virtual EMaterialType getType() const override
+		{
+			return EMaterialType::Phong;
+		}
+
 		bool isSpecular() const
 		{
 			return (m_specularity > 0.0);

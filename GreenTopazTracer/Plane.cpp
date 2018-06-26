@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 
 
 Plane::Plane(const Vector3& center, const Vector3& normal, const MaterialPhong& material)
-	: GeometricObject(center, false), 
+	: GeometricObject(center), 
 	  m_normal(normal)
 {
 	m_spMaterial = std::make_unique<MaterialPhong>(material);
@@ -25,11 +25,11 @@ Plane::~Plane()
 {
 }
 
-bool Plane::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
+bool Plane::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo) const
 {
 	VComponent t = Vector3::dot(m_center - ray.m_origin, m_normal) / Vector3::dot(ray.m_direction, m_normal);
 
-	if (t > Epsilon)
+	if (t > FloatingEpsilon)
 	{
 		tNearest = t;
 		hitInfo.m_normal = m_normal;
@@ -41,7 +41,7 @@ bool Plane::hit(const Ray& ray, VComponent& tNearest, HitInfo& hitInfo)
 	return false;
 }
 
-const Material& Plane::getMaterial() const
+Material* Plane::getMaterial() const
 {
-	return *m_spMaterial;
+	return m_spMaterial.get();
 }

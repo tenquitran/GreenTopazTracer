@@ -153,6 +153,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialEmissive.h" />
     <ClInclude Include="MaterialPhong.h" />
+    <ClInclude Include="MaterialType.h" />
     <ClInclude Include="PixelCounter.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Ray.h" />

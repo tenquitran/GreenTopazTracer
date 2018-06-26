@@ -56,6 +56,7 @@ namespace GreenTopazTracerApp
 
 #include "HitInfo.h"
 
+#include "MaterialType.h"
 #include "Material.h"
 #include "MaterialPhong.h"
 #include "MaterialEmissive.h"

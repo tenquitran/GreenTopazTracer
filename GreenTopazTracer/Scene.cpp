@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 
 
 Scene::Scene(const Color& backgroundColor)
-	: m_backgroundColor(backgroundColor)
+	: m_backgroundColor(backgroundColor), m_ambientLightIntensity(0.2)
 {
 #if 0
 	// Add a sphere with the center at the origin.
@@ -88,8 +88,13 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 
 		if (itr->hit(ray, currDistance, currentHit))
 		{
+#if 1
+			// On hit, all intersectable objects should return the distance larger than the Epsilon value.
+			assert(currDistance >= GeometricObject::FloatingEpsilon);
+#else
 			// On hit, all intersectable objects should return the distance larger than their Epsilon values, which are positive.
 			assert(currDistance >= 0.0);
+#endif
 
 			if (currDistance < nearestDistance)
 			{
@@ -105,26 +110,70 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 
 Color Scene::computeIllumination(const HitInfo& hit) const
 {
-#if 1
+#if 0
 	// TODO: temp, simplified.
 	return (hit.m_pHit->getMaterial().calculateColor(hit));
 #else
 
-	Color result;
+	// TODO: if the hit point is at the light source, use the emissive color, etc.
 
+	// TODO: temp
 #if 0
-	Color col(0, 0, 0);
-	for each light L
+	MaterialPhong *pMat = dynamic_cast<MaterialPhong*>(hit.m_pHit->getMaterial());
+
+	switch (hit.m_pHit->getMaterial()->getType())
 	{
-		// create shadow ray; is ”is” in shadow
-		// use intersectScene for this...
-		if (not inShadow(L, is))
-		{
-			col += DiffuseAndSpecular(L, is);
-		}
+	case EMaterialType::Phong:
+		;
+		break;
+	case EMaterialType::Emissive:
+		;
+		break;
+	default:
+		assert(false); break;
 	}
-	return col;
 #endif
 
+	// Add ambient light contribution.
+	Color clrResult = m_ambientLightIntensity * hit.m_pHit->getMaterial()->calculateColor(hit);
+
+	// Create shadow rays for each light in the scene.
+	for (const auto& itr : m_objects)
+	{
+		if (itr->isLight())
+		{
+			// Direction to the light source.
+			Vector3 direction = (itr->getCenter() - hit.m_localHitPoint).normalize();
+
+			// Ensure the light source is not behind the hit point's surface.
+			if (hit.m_normal.dot(direction) <= 0.0)
+			{
+				continue;
+			}
+
+			Ray ray(hit.m_localHitPoint, direction);
+
+			HitInfo currHit = findNearestHit(ray);
+
+			if (currHit.isValid())
+			{
+				if (currHit.m_pHit->isLight())
+				{
+					// The point is not in shadow
+					
+					// Add diffuse light contribution.
+					;
+
+					// Add specular light contribution.
+					;
+
+					// TODO: temp, simplified.
+					//return (hit.m_pHit->getMaterial().calculateColor(hit));
+				}
+			}
+		}
+	}
+
+	return clrResult;
 #endif
 }

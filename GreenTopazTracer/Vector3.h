@@ -9,6 +9,7 @@ namespace GreenTopazTracerApp
 	// Pixel coordinates (X and Y respectively).
 	typedef std::pair<VComponent, VComponent> Pixel;
 
+
 	struct Vector3
 	{
 	public:
@@ -74,9 +75,9 @@ namespace GreenTopazTracerApp
 	};
 
 	// Multiplication by VComponent on the left.
-	inline Vector3 operator*(VComponent val, const Vector3& other)
+	inline Vector3 operator*(VComponent val, const Vector3& vec)
 	{
-		return (other * val);
+		return (vec * val);
 	}
 }
 

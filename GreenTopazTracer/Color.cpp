@@ -51,7 +51,7 @@ Color Color::operator/(int divisor) const
 	return Color(m_red / divisor, m_green / divisor, m_blue / divisor);
 }
 
-Color Color::operator*(double val) const
+Color Color::operator*(ClrComponentType val) const
 {
 	return Color(m_red * val, m_green * val, m_blue * val);
 }

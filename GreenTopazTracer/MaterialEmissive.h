@@ -14,7 +14,12 @@ namespace GreenTopazTracerApp
 		// Calculate color at the intersection point.
 		virtual Color calculateColor(const HitInfo& hitInfo) const override;
 
-	private:
+		virtual EMaterialType getType() const override
+		{
+			return EMaterialType::Emissive;
+		}
+
+	public:
 		Color m_emissive;
 
 		double m_intensity;

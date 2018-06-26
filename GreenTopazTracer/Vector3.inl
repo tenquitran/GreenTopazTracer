@@ -32,7 +32,7 @@ Vector3 Vector3::normalize() const
 	VComponent len = this->length();
 
 	// Normalization is required (and possible) only if the vector length is non-zero.
-	if (0 != len)
+	if (0.0 != len)
 	{
 		VComponent reciprocal = 1 / this->length();
 
@@ -114,7 +114,7 @@ Vector3& Vector3::operator*=(VComponent val)
 
 Vector3 Vector3::operator/(VComponent val) const
 {
-	if (0 == val)
+	if (0.0 == val)
 	{
 		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
 	}
@@ -126,7 +126,7 @@ Vector3 Vector3::operator/(VComponent val) const
 
 Vector3& Vector3::operator/=(VComponent val)
 {
-	if (0 == val)
+	if (0.0 == val)
 	{
 		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
 	}

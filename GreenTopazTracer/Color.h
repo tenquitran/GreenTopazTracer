@@ -27,7 +27,7 @@ namespace GreenTopazTracerApp
 
 		Color operator/(int divisor) const;
 
-		Color operator*(double val) const;
+		Color operator*(ClrComponentType val) const;
 
 	public:
 		ClrComponentType m_red;
@@ -35,4 +35,11 @@ namespace GreenTopazTracerApp
 		ClrComponentType m_blue;
 	};
 #pragma pack(pop)
+
+
+	// Multiplication by ClrComponentType on the left.
+	inline Color operator*(ClrComponentType val, const Color& clr)
+	{
+		return (clr * val);
+	}
 }

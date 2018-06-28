@@ -29,6 +29,10 @@ namespace GreenTopazTracerApp
 
 		Color operator*(ClrComponentType val) const;
 
+		Color operator*(const Color& other) const;
+
+		bool isBlack() const;
+
 	public:
 		ClrComponentType m_red;
 		ClrComponentType m_green;

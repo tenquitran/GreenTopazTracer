@@ -55,3 +55,15 @@ Color Color::operator*(ClrComponentType val) const
 {
 	return Color(m_red * val, m_green * val, m_blue * val);
 }
+
+Color Color::operator*(const Color& other) const
+{
+	return Color(m_red * other.m_red, m_green * other.m_green, m_blue * other.m_blue);
+}
+
+bool Color::isBlack() const
+{
+	return (   0.0 == m_red
+			&& 0.0 == m_green
+			&& 0.0 == m_blue);
+}

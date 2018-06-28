@@ -108,34 +108,31 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 	return nearestHit;
 }
 
-Color Scene::computeIllumination(const HitInfo& hit) const
+Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection) const
 {
 #if 0
 	// TODO: temp, simplified.
 	return (hit.m_pHit->getMaterial().calculateColor(hit));
 #else
 
-	// TODO: if the hit point is at the light source, use the emissive color, etc.
-
-	// TODO: temp
-#if 0
-	MaterialPhong *pMat = dynamic_cast<MaterialPhong*>(hit.m_pHit->getMaterial());
-
-	switch (hit.m_pHit->getMaterial()->getType())
+	// If the object hit by the ray is itself a light source, simply calculate color emitted by it.
+	if (hit.m_pHit->isLight())
 	{
-	case EMaterialType::Phong:
-		;
-		break;
-	case EMaterialType::Emissive:
-		;
-		break;
-	default:
-		assert(false); break;
+		MaterialEmissive *pObjectMat = dynamic_cast<MaterialEmissive *>(hit.m_pHit->getMaterial());
+		if (!pObjectMat)
+		{
+			assert(false); return Color();
+		}
+
+		return pObjectMat->calcEmissiveColor();
 	}
-#endif
+
+	Material *pMat = hit.m_pHit->getMaterial();
+
+	Vector3 normal = hit.m_normal;
 
 	// Add ambient light contribution.
-	Color clrResult = m_ambientLightIntensity * hit.m_pHit->getMaterial()->calculateColor(hit);
+	Color clrResult = pMat->calcAmbientColor(m_ambientLightIntensity);
 
 	// Create shadow rays for each light in the scene.
 	for (const auto& itr : m_objects)
@@ -143,15 +140,15 @@ Color Scene::computeIllumination(const HitInfo& hit) const
 		if (itr->isLight())
 		{
 			// Direction to the light source.
-			Vector3 direction = (itr->getCenter() - hit.m_localHitPoint).normalize();
+			Vector3 lightVector = (itr->getCenter() - hit.m_localHitPoint).normalize();
 
 			// Ensure the light source is not behind the hit point's surface.
-			if (hit.m_normal.dot(direction) <= 0.0)
+			if (hit.m_normal.dot(lightVector) <= 0.0)
 			{
 				continue;
 			}
 
-			Ray ray(hit.m_localHitPoint, direction);
+			Ray ray(hit.m_localHitPoint, lightVector);
 
 			HitInfo currHit = findNearestHit(ray);
 
@@ -159,16 +156,20 @@ Color Scene::computeIllumination(const HitInfo& hit) const
 			{
 				if (currHit.m_pHit->isLight())
 				{
-					// The point is not in shadow
-					
+					// The point is not in shadow.
+
+					// Light source material.
+					MaterialEmissive *pLightMat = dynamic_cast<MaterialEmissive *>(itr->getMaterial());
+					if (!pLightMat)
+					{
+						assert(false); return Color();
+					}
+
 					// Add diffuse light contribution.
-					;
+					clrResult += pMat->calcDiffuseColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity);
 
 					// Add specular light contribution.
-					;
-
-					// TODO: temp, simplified.
-					//return (hit.m_pHit->getMaterial().calculateColor(hit));
+					clrResult += pMat->calcSpecularColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity, rayDirection);
 				}
 			}
 		}

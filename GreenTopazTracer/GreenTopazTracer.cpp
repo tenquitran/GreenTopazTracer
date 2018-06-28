@@ -189,6 +189,6 @@ Color GreenTopazTracer::traceRay(const Ray& ray, int steps) const
 	// TODO: temp, simplified.
 	return (hit.m_pHit->getColor());
 #else
-	return m_scene.computeIllumination(hit);
+	return m_scene.computeIllumination(hit, ray.m_direction);
 #endif
 }

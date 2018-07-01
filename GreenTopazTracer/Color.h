@@ -33,6 +33,8 @@ namespace GreenTopazTracerApp
 
 		bool isBlack() const;
 
+		Color& clamp();
+
 	public:
 		ClrComponentType m_red;
 		ClrComponentType m_green;

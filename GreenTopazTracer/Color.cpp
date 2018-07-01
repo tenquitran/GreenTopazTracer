@@ -67,3 +67,35 @@ bool Color::isBlack() const
 			&& 0.0 == m_green
 			&& 0.0 == m_blue);
 }
+
+Color& Color::clamp()
+{
+	if (m_red < 0.0)
+	{
+		m_red = 0.0;
+	}
+	else if (m_red > 255.0)
+	{
+		m_red = 255.0;
+	}
+
+	if (m_green < 0.0)
+	{
+		m_green = 0.0;
+	}
+	else if (m_green > 255.0)
+	{
+		m_green = 255.0;
+	}
+
+	if (m_blue < 0.0)
+	{
+		m_blue = 0.0;
+	}
+	else if (m_blue > 255.0)
+	{
+		m_blue = 255.0;
+	}
+
+	return (*this);
+}

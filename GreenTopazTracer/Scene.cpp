@@ -34,11 +34,11 @@ Scene::Scene(const Color& backgroundColor)
 #if 1
 	// Add light sources.
 
-	std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
-	//std::unique_ptr<LightSource> light1 = std::make_unique<LightSource>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 1.0));
-
+	std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light1));
-	//m_lights.emplace_back(std::move(light1));
+
+	std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+	m_objects.emplace_back(std::move(light2));
 #endif
 }
 
@@ -165,16 +165,23 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 						assert(false); return Color();
 					}
 
+#if 1
 					// Add diffuse light contribution.
 					clrResult += pMat->calcDiffuseColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity);
+#endif
 
+#if 0
 					// Add specular light contribution.
+					// TODO: clearly wrong - when summed up with the diffuse contribution, 
+					// adds something like a shadow where the light source lits the object.
+					// Check for overflow but also note that the specular area is suspiciously large.
 					clrResult += pMat->calcSpecularColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity, rayDirection);
+#endif
 				}
 			}
 		}
 	}
 
-	return clrResult;
+	return clrResult.clamp();
 #endif
 }

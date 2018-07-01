@@ -31,11 +31,6 @@ Color MaterialPhong::calcAmbientColor(ClrComponentType ambIntensity) const
 
 Color MaterialPhong::calcDiffuseColor(const Vector3& normal, const Vector3& lightVector, const Color& lightColor, double lightBrightness) const
 {
-	if (m_diffuseColor.isBlack())
-	{
-		return m_diffuseColor;
-	}
-
 	// We are ignoring the distance between the light surface and the intersection point - hence, no attenuation.
 	double dot = normal.dot(lightVector);
 
@@ -50,9 +45,9 @@ Color MaterialPhong::calcDiffuseColor(const Vector3& normal, const Vector3& ligh
 Color MaterialPhong::calcSpecularColor(const Vector3& normal, const Vector3& lightVector, 
 	const Color& lightColor, double lightBrightness, const Vector3& rayDirection) const
 {
-	if (m_specularColor.isBlack())
+	if (m_specularity <= 0.0)
 	{
-		return m_specularColor;
+		return Color();
 	}
 
 	Vector3 lightVector2 = -lightVector;

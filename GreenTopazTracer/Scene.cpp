@@ -17,13 +17,14 @@ Scene::Scene(const Color& backgroundColor)
 	Color red(0.94, 0.28, 0.31);    // red (not too bright)
 
 	// A sphere with the center at the top left corner.
-	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0, MaterialPhong(red, red, red, 0.0));
+	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0, MaterialPhong(red, red, red, 0.5));
 	//sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
 
-	Color darkBlue(0.0, 0.0, 0.63);
+	//Color darkBlue(0.0, 0.0, 0.63);
+    Color green(0.0, 1.0, 0.0);
 
 	// A sphere with the center at the origin.
-	std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(darkBlue, darkBlue, darkBlue, 0.0));
+    std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(/*darkBlue*/ green, green, green, 0.5));
 	//sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
 #endif
 	
@@ -34,10 +35,12 @@ Scene::Scene(const Color& backgroundColor)
 #if 1
 	// Add light sources.
 
-	std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.9));
+    //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light1));
 
-	std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
+    //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light2));
 #endif
 }
@@ -170,6 +173,7 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 					clrResult += pMat->calcDiffuseColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity);
 #endif
 
+					// TODO: fix and uncomment
 #if 0
 					// Add specular light contribution.
 					// TODO: clearly wrong - when summed up with the diffuse contribution, 

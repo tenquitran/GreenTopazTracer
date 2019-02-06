@@ -74,27 +74,27 @@ Color& Color::clamp()
 	{
 		m_red = 0.0;
 	}
-	else if (m_red > 255.0)
+	else if (m_red > 1.0)
 	{
-		m_red = 255.0;
+		m_red = 1.0;
 	}
 
 	if (m_green < 0.0)
 	{
 		m_green = 0.0;
 	}
-	else if (m_green > 255.0)
+	else if (m_green > 1.0)
 	{
-		m_green = 255.0;
+		m_green = 1.0;
 	}
 
 	if (m_blue < 0.0)
 	{
 		m_blue = 0.0;
 	}
-	else if (m_blue > 255.0)
+	else if (m_blue > 1.0)
 	{
-		m_blue = 255.0;
+		m_blue = 1.0;
 	}
 
 	return (*this);

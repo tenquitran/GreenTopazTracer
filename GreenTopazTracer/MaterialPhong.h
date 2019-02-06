@@ -17,6 +17,12 @@ namespace GreenTopazTracerApp
 
 		virtual ~MaterialPhong();
 
+#if 1
+        // Parameters: intersection - intersection point between the ray and the scene object.
+        Color calculatePhongColor(/*const Material& material,*/ const Vector3& intersection, 
+            const Vector3& rayDirection, const Vector3& normal) const;
+#endif
+
 #if 0
 		// Calculate color at the intersection point.
 		virtual Color calculateColor(const HitInfo& hitInfo) const override;

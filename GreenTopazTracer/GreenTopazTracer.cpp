@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps)
+GreenTopazTracer::GreenTopazTracer(int imageWidth, int imageHeight, unsigned int threadCount, int maxTracingSteps)
 	: HorizontalResolution(imageWidth), VerticalResolution(imageHeight), PixelCount(imageWidth * imageHeight),
 	  ThreadCount(threadCount), MaxTracingSteps(maxTracingSteps),
 	  m_imagePlane(imageWidth, imageHeight), 
@@ -100,7 +100,7 @@ void GreenTopazTracer::traceScene()
 #if 1    // use multithreading and multisampling
 	m_threads.resize(ThreadCount);
 
-	for (int i = 0; i < ThreadCount; ++i)
+    for (unsigned int i = {}; i < ThreadCount; ++i)
 	{
 		m_threads[i].Attach(CreateThread(nullptr, 0, threadProc, this, CREATE_SUSPENDED, nullptr));
 		if (!m_threads[i])
@@ -110,7 +110,7 @@ void GreenTopazTracer::traceScene()
 		}
 	}
 
-	for (int i = 0; i < ThreadCount; ++i)
+    for (unsigned int i = {}; i < ThreadCount; ++i)
 	{
 		if ((DWORD)-1 == ResumeThread(m_threads[i]))
 		{

@@ -47,7 +47,16 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 		DWORD tick2 = GetTickCount() - tick1;
 #endif
 
-		MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight);
+        // Check out suitable number of threads (by default, 4).
+
+        unsigned int threadCount = std::thread::hardware_concurrency();
+
+        if (0 == threadCount)
+        {
+            threadCount = 4;
+        }
+
+        MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight, threadCount);
 
 		//imagePlane.setPixelColor(0, 0, Color(1, 1, 1));
 		//imagePlane.setPixelColor(0, 1, Color(2, 2, 2));

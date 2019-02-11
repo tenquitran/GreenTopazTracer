@@ -29,6 +29,7 @@
 #include <limits>
 #include <random>
 #include <atomic>
+#include <thread>
 
 // ATL and COM functionality for WIC-based ImageProcessor.
 #include <Objbase.h>

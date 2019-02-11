@@ -8,7 +8,7 @@ namespace GreenTopazTracerApp
 	class MainWindow
 	{
 	public:
-		MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight);
+		MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight, unsigned int threadCount);
 
 		virtual ~MainWindow();
 

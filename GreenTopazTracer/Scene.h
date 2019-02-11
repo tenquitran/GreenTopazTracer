@@ -29,6 +29,9 @@ namespace GreenTopazTracerApp
 		Scene(const Scene&) = delete;
 		Scene& operator=(const Scene&) = delete;
 
+        // Create a scene suitable for Phong lighting demonstration.
+        void createPhongScene();
+
 	private:
 		// Objects in the scene, including light sources.
 		std::vector<GeometricObjectUPtr> m_objects;

@@ -14,7 +14,7 @@ namespace GreenTopazTracerApp
 		//             threadCount - number of threads to perform ray tracing;
 		//             maxTracingSteps - maximum number of steps for ray tracing.
 		// Throws: Exception, std::bad_alloc
-		GreenTopazTracer(int imageWidth, int imageHeight, int threadCount, int maxTracingSteps);
+		GreenTopazTracer(int imageWidth, int imageHeight, unsigned int threadCount, int maxTracingSteps);
 
 		virtual ~GreenTopazTracer();
 
@@ -47,7 +47,7 @@ namespace GreenTopazTracerApp
 			return m_imagePlane.getVerticalResolution();
 		}
 
-		const int getThreadCount() const
+		const unsigned int getThreadCount() const
 		{
 			return ThreadCount;
 		}
@@ -75,7 +75,7 @@ namespace GreenTopazTracerApp
         const long PixelCount = {};
 
 		// Number of threads to perform ray tracing.
-        const int ThreadCount = {};
+        const unsigned int ThreadCount = {};
 
 		// Maximum number of steps for ray tracing.
         const int MaxTracingSteps = {};

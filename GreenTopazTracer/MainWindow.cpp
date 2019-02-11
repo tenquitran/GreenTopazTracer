@@ -14,10 +14,11 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight)
+MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight, unsigned int threadCount)
 	: m_hAppInstance(hInstance), m_clientWidth(clientWidth), m_clientHeight(clientHeight),
 	  m_tracer(clientWidth, clientHeight, 
-	  4, 10)    // TODO: hard-coded
+	  threadCount, 
+      10)    // TODO: hard-coded
 {
 	// Initialize global strings.
 	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);
@@ -190,7 +191,7 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 		}
 		else
 		{
-			std::wcout << TIME_STR() << L"Starting ray tracing..." << std::endl;
+			std::wcout << TIME_STR() << L"Starting ray tracing (" << pMainWnd->m_tracer.getThreadCount() << " threads) ..." << std::endl;
 
 			pMainWnd->m_rayTracingStarted = true;
 

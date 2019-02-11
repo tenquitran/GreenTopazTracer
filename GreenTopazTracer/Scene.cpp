@@ -17,31 +17,39 @@ Scene::Scene(const Color& backgroundColor)
 	Color red(0.94, 0.28, 0.31);    // red (not too bright)
 
 	// A sphere with the center at the top left corner.
-	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0, MaterialPhong(red, red, red, 0.5));
+	std::unique_ptr<Sphere> sphere1 = std::make_unique<Sphere>(Vector3(-400.0, -300.0, 0.0), 120.0, MaterialPhong(red, red, red, 1250 /*0.5*/));
 	//sphere1->setColor(0.94, 0.28, 0.31);    // red (not too bright)
 
 	//Color darkBlue(0.0, 0.0, 0.63);
     Color green(0.0, 1.0, 0.0);
 
 	// A sphere with the center at the origin.
-    std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(/*darkBlue*/ green, green, green, 0.5));
+    std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 150.0, MaterialPhong(/*darkBlue*/ green, green, green, 100.0));
+    //std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(/*darkBlue*/ green, green, green, 0.5));
 	//sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
 #endif
+
+    Color orange(1.0, 0.5, 0.15);
+
+    std::unique_ptr<Sphere> sphere3 = std::make_unique<Sphere>(Vector3(180.0, 75.0, 50.0), 25.0, MaterialPhong(orange, orange, orange));
+    //std::unique_ptr<Sphere> sphere3 = std::make_unique<Sphere>(Vector3(100.0, 55.0, 50.0), 15.0, MaterialPhong(orange, orange, orange, 0.5));
 	
 	m_objects.emplace_back(std::move(sphere1));
-	m_objects.emplace_back(std::move(sphere2));
+    m_objects.emplace_back(std::move(sphere2));
+    m_objects.emplace_back(std::move(sphere3));
 	//m_objects.emplace_back(std::make_unique<Sphere>(Vector3(), 85.0));
 
 #if 1
 	// Add light sources.
 
-    std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.9));
-    //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.95));
+    //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.9));
+    ////std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light1));
 
-    //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-250, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
-    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
-    //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.75));
+    ////std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-250, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
+    ////std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light2));
 #endif
 }
@@ -175,7 +183,7 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 #endif
 
 					// TODO: fix and uncomment
-#if 0
+#if 1
 					// Add specular light contribution.
 					// TODO: clearly wrong - when summed up with the diffuse contribution, 
 					// adds something like a shadow where the light source lits the object.

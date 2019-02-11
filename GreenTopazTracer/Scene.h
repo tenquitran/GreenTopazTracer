@@ -21,6 +21,8 @@ namespace GreenTopazTracerApp
 		// Return: intersection data. Call isValid() to check if there was an actual intersection.
 		HitInfo findNearestHit(const Ray& ray) const;
 
+        // Parameters: hit - hit point data;
+        //             rayDirection - direction of the ray.
 		Color computeIllumination(const HitInfo& hit, const Vector3& rayDirection) const;
 
 	private:

@@ -13,7 +13,7 @@ namespace GreenTopazTracerApp
 #endif
 
 		MaterialPhong(const Color& ambient, const Color& diffuse, const Color& specular, 
-			double specularity, double reflectivity = 0.0, double opacity = 1.0, double refractionIndex = 1.0);
+			double specularity = 0.0, double reflectivity = 0.0, double opacity = 1.0, double refractionIndex = 1.0);
 
 		virtual ~MaterialPhong();
 

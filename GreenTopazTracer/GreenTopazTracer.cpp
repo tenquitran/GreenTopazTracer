@@ -37,7 +37,8 @@ DWORD GreenTopazTracer::threadProc()
 	const Vector3 RayDirection(0.0, 0.0, -1.0);
 
 	// Z coordinate of the view plane.
-	const VComponent ViewZ = 100.0;
+    const VComponent ViewZ = 500.0;
+    //const VComponent ViewZ = 100.0;
 
 	const VComponent PixelSize = m_imagePlane.PixelSize;
 

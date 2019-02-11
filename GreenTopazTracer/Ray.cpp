@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 
 #if 0
 // If the ray intensity is lower than the threshold, the ray is considered insignificant.
-const ClrComponentType Ray::INTENSITY_THRESHOLD = 0.001;
+const ClrComponentType Ray::IntensityThreshold = 0.001;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,8 +28,8 @@ Ray::Ray(const Vector3& origin, const Vector3& direction/*, const Color& intensi
 #if 0
 bool Ray::isIntensityTooLow() const
 {
-	return (   m_intensity.m_red   <= INTENSITY_THRESHOLD
-		    && m_intensity.m_green <= INTENSITY_THRESHOLD
-		    && m_intensity.m_blue  <= INTENSITY_THRESHOLD);
+    return (   m_intensity.m_red   <= IntensityThreshold
+            && m_intensity.m_green <= IntensityThreshold
+            && m_intensity.m_blue  <= IntensityThreshold);
 }
 #endif

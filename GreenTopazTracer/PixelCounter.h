@@ -8,8 +8,7 @@ namespace GreenTopazTracerApp
 	{
 	public:
 		PixelCounter(int horizontalResolution, int verticalResolution)
-			: HorizontalResolution(horizontalResolution), VerticalResolution(verticalResolution),
-			m_row{}, m_column(-1)
+			: HorizontalResolution(horizontalResolution), VerticalResolution(verticalResolution)
 		{
 			InitializeCriticalSection(&m_cs);
 		}
@@ -52,12 +51,12 @@ namespace GreenTopazTracerApp
 		}
 
 	private:
-		const int HorizontalResolution;
-		const int VerticalResolution;
+        const int HorizontalResolution = {};
+        const int VerticalResolution   = {};
 
 		// Current row and column.
-		int m_row;
-		int m_column;
+        int m_row    = {};
+        int m_column = { -1 };
 
 		CRITICAL_SECTION m_cs;
 	};

@@ -134,9 +134,6 @@
     <ClCompile Include="Ray.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="HitInfo.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Color</Filter>
     </ClCompile>

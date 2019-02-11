@@ -28,10 +28,10 @@ namespace GreenTopazTracerApp
 
 	private:
 		// Application instance.
-		HINSTANCE m_hAppInstance;
+        HINSTANCE m_hAppInstance = { nullptr };
 
 		// Main window handle.
-		HWND m_hMainWindow;
+        HWND m_hMainWindow = { nullptr };
 
 		static const int MaxLoadString = 100;
 
@@ -42,13 +42,13 @@ namespace GreenTopazTracerApp
 		WCHAR m_windowClassName[MaxLoadString];
 
 		// Width and height of the window.
-		int m_clientWidth;
-		int m_clientHeight;
+        int m_clientWidth  = {};
+        int m_clientHeight = {};
 
 		// Ray tracer.
 		GreenTopazTracer m_tracer;
 
 		// true if the ray tracing have been started.
-		bool m_rayTracingStarted;
+        bool m_rayTracingStarted = { false };
 	};
 }

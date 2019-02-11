@@ -21,7 +21,7 @@ namespace GreenTopazTracerApp
 		Sampler& operator=(const Sampler&) = delete;
 
 	private:
-		const int SampleCount;
+        const int SampleCount = {};
 
 		std::mt19937 m_randomEngine;
 	};

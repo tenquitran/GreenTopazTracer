@@ -38,6 +38,6 @@ namespace GreenTopazTracerApp
 
 		Color m_backgroundColor;
 
-		ClrComponentType m_ambientLightIntensity;
+        ClrComponentType m_ambientLightIntensity = { 0.2 };
 	};
 }

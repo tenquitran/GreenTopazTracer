@@ -171,7 +171,6 @@
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="GeometricObject.cpp" />
     <ClCompile Include="GreenTopazTracer.cpp" />
-    <ClCompile Include="HitInfo.cpp" />
     <ClCompile Include="ImagePlane.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="MainWindow.cpp" />

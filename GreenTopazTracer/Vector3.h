@@ -13,7 +13,7 @@ namespace GreenTopazTracerApp
 	struct Vector3
 	{
 	public:
-		inline Vector3();
+		Vector3() = default;
 
 		inline explicit Vector3(VComponent x);
 
@@ -69,9 +69,9 @@ namespace GreenTopazTracerApp
 		inline static Vector3 cross(const Vector3& a, const Vector3& b);
 
 	public:
-		VComponent m_x;
-		VComponent m_y;
-		VComponent m_z;
+        VComponent m_x = {};
+        VComponent m_y = {};
+        VComponent m_z = {};
 	};
 
 	// Multiplication by VComponent on the left.

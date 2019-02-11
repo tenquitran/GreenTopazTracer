@@ -70,7 +70,6 @@ namespace GreenTopazTracerApp
 		}
 
 	private:
-	//public:
 		Color m_ambientColor;
 
 		Color m_diffuseColor;
@@ -80,15 +79,15 @@ namespace GreenTopazTracerApp
 		// Specular reflection coefficient (shininess or glossiness).
 		// Very large (e.g. 1250) for small and bright specular reflections, 
 		// relatively small (e.g. 2) for larger but not so bright specular reflections.
-		double m_specularity;
+        double m_specularity = {};
 
 		// Reflectivity coefficient for mirror-like reflections.
 		// Not the same as specularity.
-		double m_reflectivity;
+        double m_reflectivity = {};
 
 		// From 0.0 (completely transparent) to 1.0 (completely opaque).
-		double m_opacity;
+        double m_opacity = { 1.0 };
 
-		double m_refractionIndex;
+        double m_refractionIndex = { 1.0 };
 	};
 }

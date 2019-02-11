@@ -10,7 +10,7 @@ namespace GreenTopazTracerApp
 	struct Color
 	{
 	public:
-		Color();
+		Color() = default;
 
 		explicit Color(ClrComponentType component);
 
@@ -36,9 +36,9 @@ namespace GreenTopazTracerApp
 		Color& clamp();
 
 	public:
-		ClrComponentType m_red;
-		ClrComponentType m_green;
-		ClrComponentType m_blue;
+        ClrComponentType m_red   = {};
+        ClrComponentType m_green = {};
+        ClrComponentType m_blue  = {};
 	};
 #pragma pack(pop)
 

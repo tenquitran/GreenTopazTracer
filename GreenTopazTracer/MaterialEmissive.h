@@ -49,6 +49,6 @@ namespace GreenTopazTracerApp
 		Color m_emissive;
 
 		// Light intensity. Can exceed 1.0;
-		double m_intensity;
+        double m_intensity = {};
 	};
 }

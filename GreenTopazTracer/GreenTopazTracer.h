@@ -68,17 +68,17 @@ namespace GreenTopazTracerApp
 		std::vector<CHandle> m_threads;
 
 	private:
-		const int HorizontalResolution;
-		const int VerticalResolution;
+        const int HorizontalResolution = {};
+        const int VerticalResolution   = {};
 
 		// Number of pixels in the image.
-		const long PixelCount;
+        const long PixelCount = {};
 
 		// Number of threads to perform ray tracing.
-		const int ThreadCount;
+        const int ThreadCount = {};
 
 		// Maximum number of steps for ray tracing.
-		const int MaxTracingSteps;
+        const int MaxTracingSteps = {};
 
 		ImagePlane m_imagePlane;
 

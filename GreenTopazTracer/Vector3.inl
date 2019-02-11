@@ -7,11 +7,6 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-Vector3::Vector3()
-	: m_x{}, m_y{}, m_z{}
-{
-}
-
 Vector3::Vector3(VComponent x)
 	: m_x(x), m_y(x), m_z(x)
 {

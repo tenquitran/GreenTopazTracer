@@ -35,10 +35,6 @@ Exception::Exception(LPCSTR fileName, int lineNumber, LPCTSTR fmtStr, ...)
 	}
 }
 
-Exception::~Exception()
-{
-}
-
 const wchar_t* Exception::message() const
 {
 	return m_message.c_str();

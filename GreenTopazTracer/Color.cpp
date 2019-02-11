@@ -7,11 +7,6 @@ using namespace GreenTopazTracerApp;
 //////////////////////////////////////////////////////////////////////////
 
 
-Color::Color()
-	: m_red{}, m_green{}, m_blue{}
-{
-}
-
 Color::Color(ClrComponentType component)
 	: m_red(component), m_green(component), m_blue(component)
 {

@@ -10,7 +10,7 @@ namespace GreenTopazTracerApp
 	struct HitInfo
 	{
 	public:
-		HitInfo();
+		HitInfo() = default;
 
 		// Returns true if there was an actual intersection with an object.
 		bool isValid() const
@@ -26,6 +26,6 @@ namespace GreenTopazTracerApp
 		Vector3 m_localHitPoint;
 
 		// The object intersected (or NULL if there is no intersection).
-		GeometricObject const * m_pHit;
+        GeometricObject const * m_pHit = { nullptr };
 	};
 }

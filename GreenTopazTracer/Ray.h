@@ -29,7 +29,7 @@ namespace GreenTopazTracerApp
 		Color m_intensity;
 
 		// If the ray intensity is lower than the threshold, the ray is considered insignificant.
-		static const ClrComponentType INTENSITY_THRESHOLD;
+		static const ClrComponentType IntensityThreshold;
 #endif
 	};
 }

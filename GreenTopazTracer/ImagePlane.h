@@ -45,20 +45,20 @@ namespace GreenTopazTracerApp
 
 	public:
 		// Horizontal resolution.
-		const int HorizontalRes;
+        const int HorizontalRes = {};
 
 		// Vertical resolution.
-		const int VerticalRes;
+        const int VerticalRes = {};
 
 		// Size of one pixel.
-		const VComponent PixelSize;
+        const VComponent PixelSize = { 1.0 };
 
 	private:
 		// Number of image plane elements.
-		const int ElementCount;
+        const int ElementCount = {};
 
 		// Image plane elements.
-		Color *m_ppPlane;
+        Color *m_ppPlane = { nullptr };
 
 		// Lock for readers and writers.
 		// Note that writers by themselves don't need it - they work with pixel indices.

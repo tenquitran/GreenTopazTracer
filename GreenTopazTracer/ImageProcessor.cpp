@@ -12,13 +12,13 @@ ImageProcessor::ImageProcessor()
 	HRESULT hr = CoInitialize(nullptr);    // initialize COM
 	if (FAILED(hr))
 	{
-		throw EXCEPTION_FMT(L"CoInitialize() failed: 0x%x (%s)", hr, _com_error(hr).ErrorMessage());
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"CoInitialize() failed: 0x%x (%s)", hr, _com_error(hr).ErrorMessage());
 	}
 
 	hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_spFactory));
 	if (FAILED(hr))
 	{
-		throw EXCEPTION_FMT(L"Failed to create imaging factory: 0x%x (%s)", hr, _com_error(hr).ErrorMessage());
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Failed to create imaging factory: 0x%x (%s)", hr, _com_error(hr).ErrorMessage());
 	}
 }
 

@@ -8,7 +8,7 @@ using namespace GreenTopazTracerApp;
 
 
 Scene::Scene(const Color& backgroundColor)
-	: m_backgroundColor(backgroundColor), m_ambientLightIntensity(0.2)
+	: m_backgroundColor(backgroundColor)
 {
 #if 0
 	// Add a sphere with the center at the origin.

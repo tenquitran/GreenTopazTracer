@@ -15,11 +15,9 @@ using namespace GreenTopazTracerApp;
 
 
 MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int clientHeight)
-	: m_hAppInstance(hInstance), m_hMainWindow(nullptr), 
-	  m_clientWidth(clientWidth), m_clientHeight(clientHeight),
+	: m_hAppInstance(hInstance), m_clientWidth(clientWidth), m_clientHeight(clientHeight),
 	  m_tracer(clientWidth, clientHeight, 
 	  4, 10)    // TODO: hard-coded
-	  , m_rayTracingStarted(false)
 {
 	// Initialize global strings.
 	LoadString(m_hAppInstance, IDS_APP_TITLE, m_titleBarStr, MaxLoadString);

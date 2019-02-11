@@ -39,7 +39,7 @@ namespace GreenTopazTracerApp
 		Vector3 m_center;
 
 		// true if the object is the light source.
-		bool m_isLight;
+        bool m_isLight = { false };
 	};
 
 	typedef std::unique_ptr<GeometricObject> GeometricObjectUPtr;

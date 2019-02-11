@@ -23,7 +23,7 @@ Color MaterialEmissive::calcAmbientColor(ClrComponentType ambIntensity) const
 	
 	UNREFERENCED_PARAMETER(ambIntensity);
 
-	assert(false); return Color();
+    ATLASSERT(FALSE); return Color();
 }
 
 Color MaterialEmissive::calcDiffuseColor(const Vector3& normal, const Vector3& lightVector, const Color& lightColor, double lightBrightness) const 
@@ -36,7 +36,7 @@ Color MaterialEmissive::calcDiffuseColor(const Vector3& normal, const Vector3& l
 	UNREFERENCED_PARAMETER(lightColor);
 	UNREFERENCED_PARAMETER(lightBrightness);
 
-	assert(false); return Color();
+    ATLASSERT(FALSE); return Color();
 }
 
 Color MaterialEmissive::calcSpecularColor(const Vector3& normal, const Vector3& lightVector, 
@@ -51,7 +51,7 @@ Color MaterialEmissive::calcSpecularColor(const Vector3& normal, const Vector3& 
 	UNREFERENCED_PARAMETER(lightBrightness);
 	UNREFERENCED_PARAMETER(rayDirection);
 
-	assert(false); return Color();
+    ATLASSERT(FALSE); return Color();
 }
 
 Color MaterialEmissive::calcEmissiveColor() const

@@ -88,7 +88,7 @@ Color MaterialPhong::calculatePhongColor( /*const Material& material,*/ const Ve
         Intersectable const * const pIntersectable = dynamic_cast<Intersectable*>(itr.get());
         if (!pIntersectable)
         {
-            assert(false); continue;
+            ATLASSERT(FALSE); continue;
         }
 
 #if 1
@@ -102,7 +102,7 @@ Color MaterialPhong::calculatePhongColor( /*const Material& material,*/ const Ve
             distance -= pSphere->getRadius();
         }
 
-        assert(distance > 0.0);
+        ATLASSERT(distance > 0.0);
 
         lightAttenuation = 1.0 / (1.0 + itr->m_attenuationFactor * glm::pow(distance, 2.0));
 #endif

@@ -26,7 +26,7 @@ DWORD WINAPI GreenTopazTracer::threadProc(LPVOID pArg)
 	GreenTopazTracer *pTracer = (GreenTopazTracer *)pArg;
 	if (!pTracer)
 	{
-		assert(false); return 1;
+        ATLASSERT(FALSE); return 1;
 	}
 
 	return (pTracer->threadProc());
@@ -105,7 +105,7 @@ void GreenTopazTracer::traceScene()
 		if (!m_threads[i])
 		{
 			std::wcerr << __FUNCTIONW__ << L": CreateThread() failed: " << GetLastError() << '\n';
-			assert(false); return;
+            ATLASSERT(FALSE); return;
 		}
 	}
 
@@ -114,7 +114,7 @@ void GreenTopazTracer::traceScene()
 		if ((DWORD)-1 == ResumeThread(m_threads[i]))
 		{
 			std::wcerr << __FUNCTIONW__ << L": ResumeThread() failed: " << GetLastError() << '\n';
-			assert(false); return;
+            ATLASSERT(FALSE); return;
 		}
 	}
 #else
@@ -164,7 +164,7 @@ void GreenTopazTracer::traceScene()
 	else
 	{
 		std::wcerr << TIME_STR() << L"Failed to save the ray traced image\n";
-		assert(false);
+        ATLASSERT(FALSE);
 	}
 
 	int tmp = 1;

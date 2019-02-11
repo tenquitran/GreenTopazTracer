@@ -57,12 +57,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 	catch (const Exception& ex)
 	{
 		std::wcerr << ex.message() << std::endl;
-		assert(false);
+        ATLASSERT(FALSE);
 	}
 	catch (const std::bad_alloc&)
 	{
 		std::wcerr << L"memalloc failure\n";
-		assert(false);
+        ATLASSERT(FALSE);
 	}
 
 	return ret;

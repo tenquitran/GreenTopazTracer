@@ -19,7 +19,7 @@ ImagePlane::ImagePlane(int horizontalRes, int verticalRes)
 	if (   HorizontalRes <= 0
 		|| VerticalRes   <= 0)
 	{
-		assert(false); throw EXCEPTION_FMT(L"Invalid horizontal (%d) and/or vertical (%d) resolution", HorizontalRes, VerticalRes);
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Invalid horizontal (%d) and/or vertical (%d) resolution", HorizontalRes, VerticalRes);
 	}
 
 	m_ppPlane = new Color[ElementCount];
@@ -42,7 +42,7 @@ Color ImagePlane::getPixelColor(int index) const
 	if (   index < 0
 		|| index >= ElementCount)
 	{
-		assert(false); return Color();
+        ATLASSERT(FALSE); return Color();
 	}
 
 	return m_ppPlane[index];
@@ -53,7 +53,7 @@ void ImagePlane::setPixelColor(int index, const Color& clr)
 	if (   index < 0
 		|| index >= ElementCount)
 	{
-		assert(false); return;
+        ATLASSERT(FALSE); return;
 	}
 
 	EnterCriticalSection(&m_lock);
@@ -79,7 +79,7 @@ void ImagePlane::setPixelColor(int row, int column, const Color& clr)
 	if (   index < 0
 		|| index >= ElementCount)
 	{
-		assert(false); return;
+        ATLASSERT(FALSE); return;
 	}
 
 	EnterCriticalSection(&m_lock);

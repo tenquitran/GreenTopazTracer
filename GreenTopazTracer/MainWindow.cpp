@@ -30,12 +30,12 @@ MainWindow::MainWindow(HINSTANCE hInstance, int nCmdShow, int clientWidth, int c
 	// Perform application initialization.
 	if (!initInstance(nCmdShow))
 	{
-		assert(false); throw EXCEPTION(L"initInstance() failed");
+		ATLASSERT(FALSE); throw EXCEPTION(L"initInstance() failed");
 	}
 
 	if (!SetTimer(m_hMainWindow, IDT_TRACE_RESULT_TIMER, 300, (TIMERPROC)nullptr))    // 500
 	{
-		assert(false); throw EXCEPTION_FMT(L"SetTimer() failed: %u", GetLastError());
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"SetTimer() failed: %u", GetLastError());
 	}
 }
 
@@ -116,7 +116,7 @@ void MainWindow::exportImage()
 	else
 	{
 		std::wcerr << TIME_STR() << L"Failed to save the ray traced image\n";
-		assert(false);
+        ATLASSERT(FALSE);
 	}
 }
 
@@ -154,7 +154,7 @@ int MainWindow::runMessageLoop()
 				break;
 			case WAIT_FAILED:
 				std::wcerr << TIME_STR() << __FUNCTIONW__ << L": unexpected wait status: " << waitStatus << '\n';
-				assert(false); break;
+                ATLASSERT(FALSE); break;
 			default:    // window message arrived
 				break;
 			}
@@ -188,7 +188,7 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 		if (!pMainWnd)
 		{
 			std::wcerr << TIME_STR() << L"WM_CREATE: main window pointer is NULL\n";
-			assert(false);
+            ATLASSERT(FALSE);
 		}
 		else
 		{
@@ -246,8 +246,8 @@ LRESULT CALLBACK MainWindow::mainWndProc(HWND hWnd, UINT message, WPARAM wParam,
 					0, 0, HorizRes, VertRes,           // source rectangle
 					buff.get(), &info, DIB_RGB_COLORS, SRCCOPY);
 
-				assert(   GDI_ERROR != lines
-					   && 0         != lines);
+				ATLASSERT(   GDI_ERROR != lines
+					      && 0         != lines);
 
 				ReleaseDC(hWnd, hdc);
 

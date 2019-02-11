@@ -39,7 +39,8 @@ Scene::Scene(const Color& backgroundColor)
     //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light1));
 
-    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
+    //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-250, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
+    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
     //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
 	m_objects.emplace_back(std::move(light2));
 #endif
@@ -64,7 +65,7 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 		Intersectable * pIntersectable = dynamic_cast<Intersectable*>(itr.get());
 		if (!pIntersectable)
 		{
-			assert(false); continue;
+            ATLASSERT(FALSE); continue;
 		}
 
 		double distance1 = {}, distance2 = {};
@@ -93,10 +94,10 @@ HitInfo Scene::findNearestHit(const Ray& ray) const
 		{
 #if 1
 			// On hit, all intersectable objects should return the distance larger than the Epsilon value.
-			assert(currDistance >= GeometricObject::FloatingEpsilon);
+			ATLASSERT(currDistance >= GeometricObject::FloatingEpsilon);
 #else
 			// On hit, all intersectable objects should return the distance larger than their Epsilon values, which are positive.
-			assert(currDistance >= 0.0);
+			ATLASSERT(currDistance >= 0.0);
 #endif
 
 			if (currDistance < nearestDistance)
@@ -124,7 +125,7 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 		MaterialEmissive *pObjectMat = dynamic_cast<MaterialEmissive *>(hit.m_pHit->getMaterial());
 		if (!pObjectMat)
 		{
-			assert(false); return Color();
+            ATLASSERT(FALSE); return Color();
 		}
 
 		return pObjectMat->calcEmissiveColor();
@@ -165,7 +166,7 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 					MaterialEmissive *pLightMat = dynamic_cast<MaterialEmissive *>(itr->getMaterial());
 					if (!pLightMat)
 					{
-						assert(false); return Color();
+                        ATLASSERT(FALSE); return Color();
 					}
 
 #if 1

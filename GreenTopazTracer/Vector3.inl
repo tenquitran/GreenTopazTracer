@@ -116,7 +116,7 @@ Vector3 Vector3::operator/(VComponent val) const
 {
 	if (0.0 == val)
 	{
-		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Divide by zero");
 	}
 
 	VComponent inverse = 1 / val;
@@ -128,7 +128,7 @@ Vector3& Vector3::operator/=(VComponent val)
 {
 	if (0.0 == val)
 	{
-		assert(false); throw EXCEPTION_FMT(L"Divide by zero");
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Divide by zero");
 	}
 
 	VComponent inverse = 1 / val;

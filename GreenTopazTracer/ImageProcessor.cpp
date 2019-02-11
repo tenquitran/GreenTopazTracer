@@ -33,17 +33,17 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (filePath.empty())
 	{
 		std::wcerr << L"Empty file path\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 	else if (width < 0 || height < 0)
 	{
 		std::wcerr << L"Invalid image dimensions\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 	else if (!spData)
 	{
 		std::wcerr << L"No data to write\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	CComPtr<IWICStream> spStream;
@@ -52,7 +52,7 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to create stream: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	hr = spStream->InitializeFromFilename(filePath.c_str(), GENERIC_WRITE);
@@ -60,7 +60,7 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	{
 		std::wcerr << L"Failed to initialize stream (file " 
 			<< filePath.c_str() << "): " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	CComPtr<IWICBitmapEncoder> spEncoder;
@@ -69,14 +69,14 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to create PNG encoder: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	hr = spEncoder->Initialize(spStream, WICBitmapEncoderNoCache);
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to initialize PNG encoder: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	CComPtr<IWICBitmapFrameEncode> spBitmapFrame;
@@ -86,7 +86,7 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to create frame: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	// Even if we don't specify any properties, the property bag seems to be required.
@@ -94,14 +94,14 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to initialize property bag: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	hr = spBitmapFrame->SetSize(width, height);
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to set bitmap frame size: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	WICPixelFormatGUID formatGUID = GUID_WICPixelFormat24bppBGR;
@@ -110,7 +110,7 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to set pixel format: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	// We are expecting to use the specified format (the data are arranged accordingly).
@@ -118,7 +118,7 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Unexpected pixel format: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 #if 0
@@ -151,21 +151,21 @@ bool ImageProcessor::saveAsPng(const std::wstring& filePath, UINT width, UINT he
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to write pixels: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	hr = spBitmapFrame->Commit();
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to commit bitmap frame: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	hr = spEncoder->Commit();
 	if (FAILED(hr))
 	{
 		std::wcerr << L"Failed to commit bitmap encoder: " << std::hex << hr << " (" << _com_error(hr).ErrorMessage() << ")\n";
-		assert(false); return false;
+        ATLASSERT(FALSE); return false;
 	}
 
 	return true;

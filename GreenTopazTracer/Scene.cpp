@@ -44,12 +44,24 @@ void Scene::createPhongScene()
 
     // Add light sources.
 
+#if 1
+    // Light source for the scene using HDR.
     std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 15));
+#else
+    // Light source for the non-HDR scene.
     //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.95));
+#endif
+
     m_objects.emplace_back(std::move(light1));
 
+#if 1
+    // Light source for the scene using HDR.
     std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 25));
+#else
+    // Light source for the non-HDR scene.
     //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.75));
+#endif
+
     m_objects.emplace_back(std::move(light2));
 }
 

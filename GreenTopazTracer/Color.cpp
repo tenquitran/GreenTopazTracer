@@ -30,6 +30,8 @@ COLORREF Color::toBGR() const
 #if 1
         Color mapped = g_spToneMapper->convert(*this);
 #else
+        // TODO: don't delete - seems to be faster.
+
         // Exposure tone mapping.
 
         const ClrComponent exposure = 0.1;
@@ -56,6 +58,8 @@ COLORREF Color::toRGB() const
 #if 1
         Color mapped = g_spToneMapper->convert(*this);
 #else
+        // TODO: don't delete - seems to be faster.
+
         // Exposure tone mapping.
 
         const ClrComponent exposure = 0.1;

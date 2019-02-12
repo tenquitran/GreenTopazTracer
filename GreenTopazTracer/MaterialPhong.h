@@ -8,36 +8,22 @@ namespace GreenTopazTracerApp
 		: public Material
 	{
 	public:
-#if 0
-		MaterialPhong();
-#endif
-
 		MaterialPhong(const Color& ambient, const Color& diffuse, const Color& specular, 
 			double specularity = 0.0, double reflectivity = 0.0, double opacity = 1.0, double refractionIndex = 1.0);
 
 		virtual ~MaterialPhong();
 
-#if 1
-        // Parameters: intersection - intersection point between the ray and the scene object.
-        Color calculatePhongColor(/*const Material& material,*/ const Vector3& intersection, 
-            const Vector3& rayDirection, const Vector3& normal) const;
-#endif
-
-#if 0
-		// Calculate color at the intersection point.
-		virtual Color calculateColor(const HitInfo& hitInfo) const override;
-#else
 		// Calculate ambient color contribution.
 		// Parameters: ambIntensity - intensity of the scene's ambient light.
-		virtual Color calcAmbientColor(ClrComponentType ambIntensity) const override;
+		Color calcAmbientColor(ClrComponentType ambIntensity) const;
 
 		// Calculate diffuse color contribution.
 		// Parameters: normal - normal at the hit point;
 		//             lightVector - direction to the light source (normalized);
 		//             lightColor - color of the light;
 		//             lightBrightness - brightness of the light.
-		virtual Color calcDiffuseColor(const Vector3& normal, const Vector3& lightVector, 
-			const Color& lightColor, double lightBrightness) const override;
+		Color calcDiffuseColor(const Vector3& normal, const Vector3& lightVector, 
+			const Color& lightColor, double lightBrightness) const;
 
 		// Calculate specular color contribution.
 		// Parameters: normal - normal at the hit point;
@@ -45,14 +31,8 @@ namespace GreenTopazTracerApp
 		//             lightColor - color of the light;
 		//             lightBrightness - brightness of the light;
 		//             rayDirection - direction of the tracing ray.
-		virtual Color calcSpecularColor(const Vector3& normal, const Vector3& lightVector,
-			const Color& lightColor, double lightBrightness, const Vector3& rayDirection) const override;
-#endif
-
-		virtual EMaterialType getType() const override
-		{
-			return EMaterialType::Phong;
-		}
+		Color calcSpecularColor(const Vector3& normal, const Vector3& lightVector,
+			const Color& lightColor, double lightBrightness, const Vector3& rayDirection) const;
 
 		bool isSpecular() const
 		{

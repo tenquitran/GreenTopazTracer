@@ -139,7 +139,11 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
 		return pObjectMat->calcEmissiveColor();
 	}
 
-	Material *pMat = hit.m_pHit->getMaterial();
+	MaterialPhong *pMat = dynamic_cast<MaterialPhong *>(hit.m_pHit->getMaterial());
+    if (!pMat)
+    {
+        ATLASSERT(FALSE); return Color();
+    }
 
 	Vector3 normal = hit.m_normal;
 
@@ -177,19 +181,11 @@ Color Scene::computeIllumination(const HitInfo& hit, const Vector3& rayDirection
                         ATLASSERT(FALSE); return Color();
 					}
 
-#if 1
 					// Add diffuse light contribution.
 					clrResult += pMat->calcDiffuseColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity);
-#endif
 
-					// TODO: fix and uncomment
-#if 1
 					// Add specular light contribution.
-					// TODO: clearly wrong - when summed up with the diffuse contribution, 
-					// adds something like a shadow where the light source lits the object.
-					// Check for overflow but also note that the specular area is suspiciously large.
 					clrResult += pMat->calcSpecularColor(normal, lightVector, pLightMat->m_emissive, pLightMat->m_intensity, rayDirection);
-#endif
 				}
 			}
 		}

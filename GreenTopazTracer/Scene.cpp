@@ -31,7 +31,6 @@ void Scene::createPhongScene()
     // A sphere with the center at the origin.
     std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 150.0, MaterialPhong(/*darkBlue*/ green, green, green, 100.0));
     //std::unique_ptr<Sphere> sphere2 = std::make_unique<Sphere>(Vector3(), 85.0, MaterialPhong(/*darkBlue*/ green, green, green, 0.5));
-    //sphere2->setColor(0.0, 0.0, 0.63);    // dark blue
 
     Color orange(1.0, 0.5, 0.15);
 
@@ -43,19 +42,15 @@ void Scene::createPhongScene()
     m_objects.emplace_back(std::move(sphere3));
     //m_objects.emplace_back(std::make_unique<Sphere>(Vector3(), 85.0));
 
-#if 1
     // Add light sources.
 
-    std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.95));
-    //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.9));
-    ////std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(100, 50, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 15));
+    //std::unique_ptr<Sphere> light1 = std::make_unique<Sphere>(Vector3(310, 195, 50.0), 5.0, MaterialEmissive(Color(1.0), 0.95));
     m_objects.emplace_back(std::move(light1));
 
-    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.75));
-    ////std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-250, -130, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.5));
-    ////std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-100, -100, 0.0), 5.0, MaterialEmissive(Color(1.0), 50.0));
+    std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 25));
+    //std::unique_ptr<Sphere> light2 = std::make_unique<Sphere>(Vector3(-160, -160, 0.0), 5.0, MaterialEmissive(Color(1.0), 0.75));
     m_objects.emplace_back(std::move(light2));
-#endif
 }
 
 HitInfo Scene::findNearestHit(const Ray& ray) const

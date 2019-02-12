@@ -52,6 +52,9 @@ namespace GreenTopazTracerApp
 #include "Vector3.h"
 
 #include "Color.h"
+#include "ToneMappingAlgorithm.h"
+#include "ToneMapper.h"
+#include "ToneMapperExposure.h"
 
 #include "Ray.h"
 

@@ -3,8 +3,9 @@
 
 namespace GreenTopazTracerApp
 {
-	// Color component data type.
-	typedef double ClrComponentType;
+	// Color component.
+	typedef double ClrComponent;
+
 
 #pragma pack(push, 1)
 	struct Color
@@ -12,9 +13,9 @@ namespace GreenTopazTracerApp
 	public:
 		Color() = default;
 
-		explicit Color(ClrComponentType component);
+		explicit Color(ClrComponent component);
 
-		Color(ClrComponentType red, ClrComponentType green, ClrComponentType blue);
+		Color(ClrComponent red, ClrComponent green, ClrComponent blue);
 
 		COLORREF toBGR() const;
 
@@ -25,26 +26,37 @@ namespace GreenTopazTracerApp
 
 		Color& operator+=(const Color& other);
 
-		Color operator/(int divisor) const;
+        Color operator-(const Color& other) const;
 
-		Color operator*(ClrComponentType val) const;
+        // Unary minus.
+        Color operator-() const;
+
+        Color operator/(int divisor) const;
+
+        Color operator/(const Color& divisor) const;
+
+		Color operator*(ClrComponent val) const;
 
 		Color operator*(const Color& other) const;
+
+        Color raiseToPower(const Vector3& v) const;
+
+        Color exponentiate() const;
 
 		bool isBlack() const;
 
 		Color& clamp();
 
 	public:
-        ClrComponentType m_red   = {};
-        ClrComponentType m_green = {};
-        ClrComponentType m_blue  = {};
+        ClrComponent m_red   = {};
+        ClrComponent m_green = {};
+        ClrComponent m_blue  = {};
 	};
 #pragma pack(pop)
 
 
 	// Multiplication by ClrComponentType on the left.
-	inline Color operator*(ClrComponentType val, const Color& clr)
+	inline Color operator*(ClrComponent val, const Color& clr)
 	{
 		return (clr * val);
 	}

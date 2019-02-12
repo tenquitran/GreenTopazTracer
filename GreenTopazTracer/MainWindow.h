@@ -15,6 +15,9 @@ namespace GreenTopazTracerApp
 		int runMessageLoop();
 
 	private:
+        MainWindow(const MainWindow&) = delete;
+        MainWindow& operator=(const MainWindow&) = delete;
+
 		ATOM registerWndClass();
 
 		BOOL initInstance(int nCmdShow);

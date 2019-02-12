@@ -37,6 +37,9 @@
     <Filter Include="Materials">
       <UniqueIdentifier>{9223327c-577d-4cc1-b82b-bf1c21955aa0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HDR">
+      <UniqueIdentifier>{16670f04-6df0-40ee-b444-d7993d86b4ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -108,6 +111,15 @@
     <ClInclude Include="MaterialType.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="ToneMapper.h">
+      <Filter>HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="ToneMappingAlgorithm.h">
+      <Filter>HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="ToneMapperExposure.h">
+      <Filter>HDR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -160,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="MaterialEmissive.cpp">
       <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="ToneMapper.cpp">
+      <Filter>HDR</Filter>
+    </ClCompile>
+    <ClCompile Include="ToneMapperExposure.cpp">
+      <Filter>HDR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

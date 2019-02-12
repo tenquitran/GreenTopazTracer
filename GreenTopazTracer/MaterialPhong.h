@@ -15,7 +15,7 @@ namespace GreenTopazTracerApp
 
 		// Calculate ambient color contribution.
 		// Parameters: ambIntensity - intensity of the scene's ambient light.
-		Color calcAmbientColor(ClrComponentType ambIntensity) const;
+		Color calcAmbientColor(ClrComponent ambIntensity) const;
 
 		// Calculate diffuse color contribution.
 		// Parameters: normal - normal at the hit point;

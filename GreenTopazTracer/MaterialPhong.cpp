@@ -19,7 +19,7 @@ MaterialPhong::~MaterialPhong()
 {
 }
 
-Color MaterialPhong::calcAmbientColor(ClrComponentType ambIntensity) const
+Color MaterialPhong::calcAmbientColor(ClrComponent ambIntensity) const
 {
 	return (ambIntensity * m_ambientColor);
 }
@@ -32,7 +32,7 @@ Color MaterialPhong::calcDiffuseColor(const Vector3& normal, const Vector3& ligh
 
     if (dot > 0.0)
     {
-        return (m_diffuseColor * lightColor * lightBrightness * dot).clamp();
+        return (m_diffuseColor * lightColor * lightBrightness * dot);
     }
 
     return Color();
@@ -57,7 +57,7 @@ Color MaterialPhong::calcSpecularColor(const Vector3& normal, const Vector3& lig
 		double specularCoefficient = pow(dot, m_specularity);
 
 		// The material's specular color should be taken into account only for metal materials.
-        return (lightColor * lightBrightness /* * m_specularColor */ * specularCoefficient).clamp();
+        return (lightColor * lightBrightness /* * m_specularColor */ * specularCoefficient);
 	}
 
 	return Color();

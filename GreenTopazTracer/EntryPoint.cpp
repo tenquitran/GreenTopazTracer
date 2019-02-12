@@ -8,6 +8,11 @@ using namespace GreenTopazTracerApp;
 
 //////////////////////////////////////////////////////////////////////////
 
+// Object to perform tone mapping (empty if we are not using HDR).
+std::unique_ptr<ToneMapper> g_spToneMapper;
+
+//////////////////////////////////////////////////////////////////////////
+
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPTSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -54,6 +59,18 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
         if (0 == threadCount)
         {
             threadCount = 4;
+        }
+
+        // TODO: hard-coded.
+        const EToneMapping toneMappingAlgorithm = EToneMapping::Exposure;
+
+        if (EToneMapping::None != toneMappingAlgorithm)
+        {
+            // TODO: hard-coded
+            ClrComponent exposure = 0.1;
+            ClrComponent gamma    = 2.2;
+
+            g_spToneMapper = ToneMapper::createToneMapper(toneMappingAlgorithm, exposure, gamma);
         }
 
         MainWindow mainWindow(hInstance, nCmdShow, ImageWidth, ImageHeight, threadCount);

@@ -86,5 +86,8 @@ namespace GreenTopazTracerApp
 
 		// Used to get the next pixel to process.
 		PixelCounter m_pixelCounter;
+
+        // Tone mapping object (empty if we are not using HDR).
+        std::unique_ptr<ToneMapper> m_spToneMapper;
 	};
 }
